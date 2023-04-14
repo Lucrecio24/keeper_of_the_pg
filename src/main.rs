@@ -4,13 +4,18 @@ mod commands;
 use dotenvy::dotenv;
 use std::env;
 use serenity::async_trait;
-use serenity::model::application::command::Command;
-use serenity::model::application::interaction::{Interaction, InteractionResponseType};
-use serenity::model::prelude::Message;
-use serenity::model::gateway::Ready;
-use serenity::model::id::GuildId;
-use serenity::prelude::*;
-
+use serenity::{
+        model::{
+            application::{
+                command::Command,
+                interaction::{Interaction , InteractionResponseType}
+            },
+            channel::Message,
+            gateway::Ready,
+            id::GuildId
+        },
+        prelude::*
+    };
 
 struct Handler{
     database: sqlx::SqlitePool
