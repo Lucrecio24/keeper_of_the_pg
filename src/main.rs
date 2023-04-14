@@ -25,8 +25,11 @@ struct Handler{
 impl EventHandler for Handler {
 
     async fn message(&self, ctx: Context, msg: Message) {
-        if let Err(why) = msg.channel_id.say(&ctx.http, "Pong!").await {
-            println!("Error sending message {:?}", why)
+        if msg.content.to_lowercase().contains("toty") & (msg.author.id != 1004145386887319692) {
+            match msg.channel_id.say(&ctx.http, "El toty se la come").await {
+                Err(error) => println!("Error sending message {:?}", error),
+                _ => {}
+            }
         }
     }
 
@@ -148,7 +151,7 @@ async fn main() {
     };
 
     // Build our client.
-    let mut client = Client::builder(token, GatewayIntents::empty())
+    let mut client = Client::builder(token, GatewayIntents::all())
         .event_handler(bot)
         .await
         .expect("Error creating client");
