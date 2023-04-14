@@ -1,0 +1,8 @@
+/target
+.env
+trusted
+/.vscode
+keepitpg.db
+trusted
+sqlx-data.json
+Cargo.lock

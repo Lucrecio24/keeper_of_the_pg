@@ -1,0 +1,20 @@
+[package]
+name = "keeper_of_the_pg"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dotenvy = "0.15.6"
+tokio = {version = "1.26.0" , features = ["rt-multi-thread"]}
+public-ip = "0.2.2"
+sqlx = { version = "0.6.3", features = ["offline" , "runtime-tokio-rustls" , "sqlite" , "macros"] }
+
+[dependencies.serenity]
+default-features = false
+features = ["builder" , "cache" , "gateway" , "http" , "model" , "rustls_backend" , "utils" , "client"]
+version = "0.11.5"
+
+[profile.dev.package.sqlx-macros]
+opt-level = 3
