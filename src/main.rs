@@ -31,6 +31,12 @@ impl EventHandler for Handler {
                 _ => {}
             }
         }
+        if msg.content.to_lowercase().contains("toti") & (msg.author.id != 1004145386887319692) {
+            match msg.channel_id.say(&ctx.http, "Es con y").await {
+                Err(error) => println!("Error sending message {:?}", error),
+                _ => {}
+            }
+        }
     }
 
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
