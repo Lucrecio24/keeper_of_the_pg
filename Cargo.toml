@@ -13,7 +13,7 @@ sqlx = { version = "0.6.3", features = ["offline" , "runtime-tokio-rustls" , "sq
 
 [dependencies.serenity]
 default-features = false
-features = ["builder" , "cache" , "gateway" , "http" , "model" , "rustls_backend" , "utils" , "client"]
+features = ["builder" , "cache" , "gateway" , "http" , "model" , "rustls_backend" , "utils" , "client" , "collector"]
 version = "0.11.5"
 
 [profile.dev.package.sqlx-macros]
