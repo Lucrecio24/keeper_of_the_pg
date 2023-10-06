@@ -32,6 +32,7 @@ impl EventHandler for Handler {
 
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
         match interaction {
+            Interaction::Ping(_) => {println!("Ping interaction")}
             Interaction::ApplicationCommand(command) => {
                 let content: Option<CommandResponse>;
                 let valid_channels: Vec<u64> = [1087524950425997383 , 959921482551668756 , 1004982773121032242].to_vec();
@@ -58,7 +59,7 @@ impl EventHandler for Handler {
                         _ => {
                             println!("ERROR 100 INTERACCIÓN NO EXISTENTE");
                             Some(CommandResponse {
-                                result_string: format!("Comando no existente..."),
+                                result_string: "Comando no existente...".to_string(),
                                 ephemeral: true,
                             })
                         }
@@ -162,7 +163,7 @@ async fn main() {
         .expect("Couldn't run databse migrations");
     
     let mc_ip: String = String::from("keepitpg.xyz");
-    let mc_port: u16 = 25569 as u16;
+    let mc_port: u16 = 25569_u16;
     
     
     let bot = Handler { database , mc_ip , mc_port};
