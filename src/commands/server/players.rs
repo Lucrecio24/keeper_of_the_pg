@@ -6,7 +6,7 @@ use mc_query::query::stat_full;
 //use serenity::model::prelude::{interaction::application_command::ApplicationCommandInteraction, command::Command};
 
 pub async fn run(
-    ctx: &serenity::client::Context,
+    _ctx: &serenity::client::Context,
     mc_ip: &String,
     mc_port: &u16)
      -> CommandResponse {
@@ -22,6 +22,7 @@ pub async fn run(
             }
             let mut player_list:String = String::from("");
             for player in data.players {
+                player_list.push_str("-");
                 player_list.push_str(&player);
                 player_list.push_str("\n");
             }

@@ -15,7 +15,7 @@ pub async fn run(
     // CHECK IF ANY OPTION INSERTED, SHOULDN'T BE POSSIBLE
     if command.data.options.get(0).is_none() {
         println!("ERROR 101 INSULT COMMAND, discord sent no user...");
-        return CommandResponse{
+        CommandResponse{
             result_string: "ERROR 101".to_string(),
             ephemeral: true
         }
@@ -57,13 +57,13 @@ pub async fn run(
                                 let message_result = target_user.direct_message(&ctx.http, |message| message.content(format!("El toty se la come\nTe han insultado {} veces." , new_amount))).await;
                                 match message_result {
                                     Ok(_x) => {
-                                        return CommandResponse{
+                                        CommandResponse{
                                             result_string: "Toty insultado por dms >:)".to_string(),
                                             ephemeral: false
                                         }
                                     }
                                     Err(_error) => {
-                                        return CommandResponse{
+                                        CommandResponse{
                                             result_string: "Error al enviar...".to_string(),
                                             ephemeral: true
                                         }
@@ -72,7 +72,7 @@ pub async fn run(
                             }
                             Err(error) => {
                                 println!("COULDN'T UPDATE DATABASE\n{}" , error);
-                                return CommandResponse {
+                                CommandResponse {
                                     result_string: format!("No se pudo actualizar la base de datos"),
                                     ephemeral: true
                                 }
@@ -81,21 +81,21 @@ pub async fn run(
 
                     }
                     Err(_) => {
-                        return CommandResponse{
+                        CommandResponse{
                             result_string: "Error al enviar...".to_string(),
                             ephemeral: true
                         }
                     }
                 }
             } else {
-                return CommandResponse {
+                CommandResponse {
                     result_string: format!("Comando no implementado para no-totys..."),
                     ephemeral: true
                 }
             }
         } else {
             println!("ERROR 102 INSULT COMMAND, discord sent no user...");
-            return CommandResponse{
+            CommandResponse{
                 result_string: format!("ERROR 102"),
                 ephemeral: true
             }

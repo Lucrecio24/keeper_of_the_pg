@@ -6,7 +6,8 @@ use mc_query::query::stat_full;
 //use serenity::model::prelude::{interaction::application_command::ApplicationCommandInteraction, command::Command};
 
 pub async fn run(
-    ctx: &serenity::client::Context,
+    
+    _ctx: &serenity::client::Context,
     mc_ip: &String,
     mc_port: &u16)
      -> CommandResponse {
