@@ -15,7 +15,7 @@ mc-query = "1.0.1"
 [dependencies.serenity]
 default-features = false
 features = ["builder" , "cache" , "gateway" , "http" , "model" , "rustls_backend" , "utils" , "client" , "collector"]
-version = "0.11.5"
+version = "0.11.6"
 
 [profile.dev.package.sqlx-macros]
 opt-level = 3
