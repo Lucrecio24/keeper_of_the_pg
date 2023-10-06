@@ -6,3 +6,4 @@ pub mod callme;
 pub mod insult;
 pub mod updatedb;
 pub mod lanascoin;
+pub mod server;

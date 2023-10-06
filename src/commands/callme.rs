@@ -12,22 +12,11 @@ use serenity::{
                 CommandDataOptionValue,
             }
         }
-    }
+    },
+    //prelude::EventHandler
 };
 use std::ops::Deref;
 use std::sync::Arc;
-/*async fn reaction_by_op( ctx: &Context , reaction: Reaction) -> bool{
-    let member = Member::convert(ctx , reaction.guild_id , _ , &reaction.user_id.unwrap().0.to_string().as_str()).await;
-    let max_rank: Rank;
-    match member{
-        Ok(x) => max_rank = get_rank(ctx, x).0,
-        Err(error) => {}
-    }
-    match max_rank {
-        Rank::Admin | Rank::Mod => true,
-        _ => false
-    }
-}*/
 
 fn filter_function( reaction: &Arc<Reaction>) -> bool{
     let partial_member = reaction.member.clone().unwrap();
@@ -51,37 +40,57 @@ fn filter_function( reaction: &Arc<Reaction>) -> bool{
 
 pub async fn run(command: &ApplicationCommandInteraction , ctx: &serenity::client::Context) -> Option<CommandResponse> {
     
+
     // COMMAND STILL IN DEVELOPMENT, THIS CHANNEL CHECK HAS TO GO.
     if command.channel_id != 959921482551668756 {
         return Some(CommandResponse{
-            result_string: format!("Comando no implementado aún, paciencia porfa"),
+            result_string: format!("Canal equivocado. Prueba por {}" , serenity::model::id::ChannelId(1087524950425997383).to_channel(&ctx).await.unwrap()),
             ephemeral: true
         })
     } else {
         // TODO | Send a deffered update response, so later we can update it if the command was successful
-        if let Err(why) = command
+
+        let mut new_nickname: String = "".to_string();
+        let mut response_content: String = "WTF?".to_string();
+        let mut is_nick_valid: bool = true;
+
+        //ACTUAL COMMAND STARTS HERE
+
+        //SAVE COMMAND DATA OPTIONS TO ITS OWN VARIABLE AND CHECK IF IT IS NONE
+        match command.data.options.get(0) {
+            None => {
+                response_content = "Sending request to remove nick".to_string();
+            }
+            Some(value) => {
+                if let CommandDataOptionValue::String(new_nickname_string) = value.resolved.as_ref().unwrap(){
+                    //IF NEW NICK ISN'T 32 OR LESS, RETURN WITH ERROR
+                    if new_nickname_string.len() > 32 {
+                        response_content = "Nick can't be longer than 32 characters".to_string();
+                        is_nick_valid = false;
+                    } else {
+                        response_content = "Sending request to change nick".to_string();
+                        new_nickname = new_nickname_string.to_string();
+                    }
+                }
+            }
+        }
+        let _ = command
         .create_interaction_response(&ctx.http, |response| {
             response
                 .kind(InteractionResponseType::ChannelMessageWithSource)
                 .interaction_response_data(|message| 
                     message
-                    .content("Sending message and waiting for reactions".to_string())
+                    .content(response_content)
                     .ephemeral(true))
         })
-        .await
-        {
-            println!("Couldn't respond to slash command:\n{}", why);
-        }
-        let mut new_nickname: String = "".to_string();
-        //ACTUAL COMMAND STARTS HERE
-        
-        //SAVE COMMAND DATA OPTIONS TO ITS OWN VARIABLE AND CHECK IF IT IS NONE
-        match command.data.options.get(0) {
-            None => {}
-            Some(value) => {
-                if let CommandDataOptionValue::String(new_nickname_string) = value.resolved.as_ref().unwrap(){
-                    new_nickname = new_nickname_string.to_string();
-                }
+        .await;
+        match is_nick_valid {
+            true => {
+                //If its valid then we do jack shit
+            }
+            false => {
+                // return none if it isn't valid
+                return None
             }
         }
         let message: Result<Message , serenity::prelude::SerenityError>;

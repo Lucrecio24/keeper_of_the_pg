@@ -1,5 +1,6 @@
 use keeper_of_the_pg::*;
 mod commands;
+mod message_handler;
 
 use dotenvy::dotenv;
 use serenity::async_trait;
@@ -11,7 +12,7 @@ use serenity::{
         },
         channel::Message,
         gateway::Ready,
-        id::GuildId,
+        id::GuildId
     },
     prelude::*,
 };
@@ -19,96 +20,87 @@ use std::env;
 
 struct Handler {
     database: sqlx::SqlitePool,
+    mc_ip: String,
+    mc_port: u16
 }
 
 #[async_trait]
 impl EventHandler for Handler {
     async fn message(&self, ctx: Context, msg: Message) {
-        if msg.content.to_lowercase().contains("toty") & (msg.author.id != 1004145386887319692) {
-            match msg.channel_id.say(&ctx.http, "El toty se la come").await {
-                Err(error) => println!("Error sending message {:?}", error),
-                _ => {}
-            }
-        }
-        if msg.content.to_lowercase().contains("toti") & (msg.author.id != 1004145386887319692) {
-            match msg.channel_id.say(&ctx.http, "Es con y").await {
-                Err(error) => println!("Error sending message {:?}", error),
-                _ => {}
-            }
-        }
+        crate::message_handler::run(ctx,msg).await;
     }
 
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
-        if let Interaction::ApplicationCommand(command) = interaction {
-            let content: Option<CommandResponse>;
+        match interaction {
+            Interaction::ApplicationCommand(command) => {
+                let content: Option<CommandResponse>;
+                let valid_channels: Vec<u64> = [1087524950425997383 , 959921482551668756 , 1004982773121032242].to_vec();
 
-            let keeper_of_the_pg_channel = serenity::model::id::ChannelId(1087524950425997383)
-                .to_channel(&ctx)
-                .await
-                .unwrap();
-            if ((command.channel_id == 1087524950425997383)
-                || (command.channel_id == 959921482551668756))
-                || (command.guild_id.is_none())
-            {
-                content = match command.data.name.as_str() {
-                    // Receiving of reaction-dependant commands (rd commands) processed here
-                    "callme" => commands::callme::run(&command, &ctx).await,
-                    // Receiving of non-reaction-dependant commands (nrd commands) processed here
-                    "ping" => Some(commands::ping::run(&command.data.options)),
-                    "id" => Some(commands::id::run(&command.data.options)),
-                    "ip" => Some(commands::ip::run(&command, &ctx).await),
-                    "updatedb" => {
-                        Some(commands::updatedb::run(&ctx, &command, &self.database).await)
+                let keeper_of_the_pg_channel = serenity::model::id::ChannelId(1087524950425997383)
+                    .to_channel(&ctx)
+                    .await
+                    .unwrap();
+                if (valid_channels.contains(&command.channel_id.0)) || (command.guild_id.is_none()) {
+                    content = match command.data.name.as_str() {
+                        // Receiving of reaction-dependant commands (rd commands) processed here
+                        "callme" => commands::callme::run(&command, &ctx).await,
+                        // Receiving of non-reaction-dependant commands (nrd commands) processed here
+                        "ping" => Some(commands::ping::run(&command.data.options)),
+                        "id" => Some(commands::id::run(&command.data.options)),
+                        "ip" => Some(commands::ip::run(&command, &ctx).await),
+                        "updatedb" => Some(commands::updatedb::run(&ctx, &command, &self.database).await),
+                        "insult" => Some(commands::insult::run(&command, &ctx, &self.database).await),
+                        // Lanas coin command subcommands inside
+                        "lanascoin" => Some(commands::lanascoin::lanascoin::run(&ctx, &command, &self.database).await),
+                        "server" => Some(commands::server::server::run(&ctx, &command, &self.database, &self.mc_ip , &self.mc_port).await),
+                        // Test command please ignore
+                        //"test" => commands::test::run(&ctx , &command , &self.database).await,
+                        _ => {
+                            println!("ERROR 100 INTERACCIÓN NO EXISTENTE");
+                            Some(CommandResponse {
+                                result_string: format!("Comando no existente..."),
+                                ephemeral: true,
+                            })
+                        }
+                    };
+                    if let Some(content) = content {
+                        if let Err(why) = command
+                            .create_interaction_response(&ctx.http, |response| {
+                                response
+                                    .kind(InteractionResponseType::ChannelMessageWithSource)
+                                    .interaction_response_data(|message| {
+                                        message
+                                            .content(content.result_string)
+                                            .ephemeral(content.ephemeral)
+                                    })
+                            })
+                            .await
+                        {
+                            println!("Couldn't respond to slash command:\n{}", why);
+                        }
                     }
-                    "insult" => Some(commands::insult::run(&command, &ctx, &self.database).await),
-                    // Lanas coin command subcommands inside
-                    "lanascoin" => Some(
-                        commands::lanascoin::lanascoin::run(&ctx, &command, &self.database).await,
-                    ),
-                    // Test command please ignore
-                    //"test" => commands::test::run(&ctx , &command , &self.database).await,
-                    _ => {
-                        println!("ERROR 100 INTERACCIÓN NO EXISTENTE");
-                        Some(CommandResponse {
-                            result_string: format!("Comando no existente..."),
-                            ephemeral: true,
-                        })
-                    }
-                };
-                if let Some(content) = content {
+                } else {
                     if let Err(why) = command
                         .create_interaction_response(&ctx.http, |response| {
                             response
                                 .kind(InteractionResponseType::ChannelMessageWithSource)
                                 .interaction_response_data(|message| {
                                     message
-                                        .content(content.result_string)
-                                        .ephemeral(content.ephemeral)
+                                        .content(format!(
+                                            "Canal equivocado. Prueba por {}",
+                                            keeper_of_the_pg_channel
+                                        ))
+                                        .ephemeral(true)
                                 })
                         })
                         .await
                     {
-                        println!("Couldn't respond to slash command:\n{}", why);
+                        println!("Cannot respond to slash command: {}", why);
                     }
                 }
-            } else {
-                if let Err(why) = command
-                    .create_interaction_response(&ctx.http, |response| {
-                        response
-                            .kind(InteractionResponseType::ChannelMessageWithSource)
-                            .interaction_response_data(|message| {
-                                message
-                                    .content(format!(
-                                        "Canal equivocado. Prueba por {}",
-                                        keeper_of_the_pg_channel
-                                    ))
-                                    .ephemeral(true)
-                            })
-                    })
-                    .await
-                {
-                    println!("Cannot respond to slash command: {}", why);
-                }
+            }
+            _ => {
+                //Do nothing if interaction isn't one of the previously mentioned
             }
         }
     }
@@ -126,9 +118,8 @@ impl EventHandler for Handler {
                 .create_application_command(|command| commands::id::register(command))
                 .create_application_command(|command| commands::insult::register(command))
                 // Lanascoin command subcommands inside
-                .create_application_command(|command| {
-                    commands::lanascoin::lanascoin::register(command)
-                })
+                .create_application_command(|command| commands::lanascoin::lanascoin::register(command))
+                .create_application_command(|command| commands::server::server::register(command))
             // Test command please ignore
             //.create_application_command(|command| commands::test::register(command))
         })
@@ -161,8 +152,7 @@ async fn main() {
         .connect_with(
             sqlx::sqlite::SqliteConnectOptions::new()
                 .filename("keepitpg.db")
-                .create_if_missing(false),
-        )
+                .create_if_missing(false))
         .await
         .expect("Couldn't connect to database");
     // Runs migrations
@@ -170,7 +160,12 @@ async fn main() {
         .run(&database)
         .await
         .expect("Couldn't run databse migrations");
-    let bot = Handler { database };
+    
+    let mc_ip: String = String::from("keepitpg.xyz");
+    let mc_port: u16 = 25569 as u16;
+    
+    
+    let bot = Handler { database , mc_ip , mc_port};
 
     // Build our client.
     let mut client = Client::builder(token, GatewayIntents::all())
