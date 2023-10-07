@@ -15,12 +15,12 @@ pub fn run(options: &[CommandDataOption]) -> CommandResponse {
         .expect("Expected user object");
     if let CommandDataOptionValue::User(user, _member) = option {
 
-        return CommandResponse{
+        CommandResponse{
             result_string: format!("{}'s id is {}", user.tag(), user.id),
             ephemeral: false
         }
     } else {
-        return CommandResponse{
+        CommandResponse{
             result_string: "Please provide a valid user".to_string(),
             ephemeral: true
         }

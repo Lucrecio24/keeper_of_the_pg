@@ -52,7 +52,7 @@ impl EventHandler for Handler {
                         "updatedb" => Some(commands::updatedb::run(&ctx, &command, &self.database).await),
                         "insult" => Some(commands::insult::run(&command, &ctx, &self.database).await),
                         // Lanas coin command subcommands inside
-                        "lanascoin" => Some(commands::lanascoin::lanascoin::run(&ctx, &command, &self.database).await),
+                        "lanascoin" => Some(commands::lanascoin::lanascoin_handler::run(&ctx, &command, &self.database).await),
                         "server" => Some(commands::server::server_handler::run(&ctx, &command, &self.database, &self.mc_ip , &self.mc_port).await),
                         // Test command please ignore
                         //"test" => commands::test::run(&ctx , &command , &self.database).await,
@@ -80,24 +80,22 @@ impl EventHandler for Handler {
                             println!("Couldn't respond to slash command:\n{}", why);
                         }
                     }
-                } else {
-                    if let Err(why) = command
-                        .create_interaction_response(&ctx.http, |response| {
-                            response
-                                .kind(InteractionResponseType::ChannelMessageWithSource)
-                                .interaction_response_data(|message| {
-                                    message
-                                        .content(format!(
-                                            "Canal equivocado. Prueba por {}",
-                                            keeper_of_the_pg_channel
-                                        ))
-                                        .ephemeral(true)
-                                })
-                        })
-                        .await
-                    {
-                        println!("Cannot respond to slash command: {}", why);
-                    }
+                } else if let Err(why) = command
+                    .create_interaction_response(&ctx.http, |response| {
+                        response
+                            .kind(InteractionResponseType::ChannelMessageWithSource)
+                            .interaction_response_data(|message| {
+                                message
+                                    .content(format!(
+                                        "Canal equivocado. Prueba por {}",
+                                        keeper_of_the_pg_channel
+                                    ))
+                                    .ephemeral(true)
+                            })
+                    })
+                    .await
+                {
+                    println!("Cannot respond to slash command: {}", why);
                 }
             }
             _ => {
@@ -119,7 +117,7 @@ impl EventHandler for Handler {
                 .create_application_command(|command| commands::id::register(command))
                 .create_application_command(|command| commands::insult::register(command))
                 // Lanascoin command subcommands inside
-                .create_application_command(|command| commands::lanascoin::lanascoin::register(command))
+                .create_application_command(|command| commands::lanascoin::lanascoin_handler::register(command))
                 .create_application_command(|command| commands::server::server_handler::register(command))
             // Test command please ignore
             //.create_application_command(|command| commands::test::register(command))

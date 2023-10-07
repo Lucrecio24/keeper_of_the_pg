@@ -3,8 +3,8 @@ use serenity::builder::CreateApplicationCommand;
 use serenity::model::prelude::interaction::application_command::{CommandDataOption};
 
 pub fn run(_options: &[CommandDataOption]) -> CommandResponse {
-    return CommandResponse{
-        result_string: format!("Pong!"),
+    CommandResponse{
+        result_string: "Pong!".to_string(),
         ephemeral: true
     }
 }

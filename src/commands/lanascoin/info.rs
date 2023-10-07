@@ -21,7 +21,7 @@ pub async fn run(
         }
         _ => {
             return CommandResponse{
-            result_string: format!("No tienes suficiente rango para usar este comando."),
+            result_string: "No tienes suficiente rango para usar este comando.".to_string(),
             ephemeral: true
             }
         }
@@ -29,7 +29,7 @@ pub async fn run(
         // Checking if command data was inputted, and returning if none
     if command.data.options.get(0).is_none() {
         return CommandResponse{
-            result_string: format!("Miembro a buscar no ingresado"),
+            result_string: "Miembro a buscar no ingresado".to_string(),
             ephemeral: true
         }
     }
@@ -58,10 +58,10 @@ pub async fn run(
             } else {
                 member_nick = "None".to_string();
             }
-            return CommandResponse{
+            CommandResponse{
                 result_string: format!(
                     "Information about {}:\nCurrent nick: {}\nMax rank: {}\nLanasCoins: {}",
-                    Mention::from(user.id.clone()),
+                    Mention::from(user.id),
                     member_nick,
                     rank_to_string(serenity::model::id::RoleId(result.get(0).unwrap().rank_id.parse::<u64>().unwrap())),
                     result.get(0).unwrap().lanas_coin
@@ -70,15 +70,15 @@ pub async fn run(
             }
         } else {
             //If query didn't yield, inform user
-            return CommandResponse{
-                result_string: format!("User not found in database..."),
+            CommandResponse{
+                result_string: "User not found in database...".to_string(),
                 ephemeral: true
             }
         }
     } else {
                 //If query didn't yield, inform user
-            return CommandResponse{
-                result_string: format!("User not found in database..."),
+            CommandResponse{
+                result_string: "User not found in database...".to_string(),
                 ephemeral: true
             }
     }

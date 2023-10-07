@@ -43,7 +43,7 @@ pub async fn run(command: &ApplicationCommandInteraction , ctx: &serenity::clien
 
     // COMMAND STILL IN DEVELOPMENT, THIS CHANNEL CHECK HAS TO GO.
     if command.channel_id != 959921482551668756 {
-        return Some(CommandResponse{
+        Some(CommandResponse{
             result_string: format!("Canal equivocado. Prueba por {}" , serenity::model::id::ChannelId(1087524950425997383).to_channel(&ctx).await.unwrap()),
             ephemeral: true
         })
@@ -95,7 +95,7 @@ pub async fn run(command: &ApplicationCommandInteraction , ctx: &serenity::clien
         }
         let message: Result<Message , serenity::prelude::SerenityError>;
         let _reactions;
-        if new_nickname == "".to_string() {
+        if new_nickname == *"" {
             let temp_message = command.channel_id.say(ctx , format!("{} quiere quitarse su apodo" , Mention::from(command.user.id))).await;
             message = temp_message;
         } else {
@@ -117,43 +117,43 @@ pub async fn run(command: &ApplicationCommandInteraction , ctx: &serenity::clien
                     })
                     .await
                     {
-                        if let serenity::collector::reaction_collector::ReactionAction::Added(reaction) = reaction_action.deref().clone(){
+                        if let serenity::collector::reaction_collector::ReactionAction::Added(reaction) = reaction_action.deref() {
                             match reaction.emoji.as_data().as_str(){
                                 "🥵" => {
-                                    if new_nickname == ""{
+                                    if new_nickname.is_empty(){
                                         command.guild_id.unwrap().edit_member(&ctx , command.user.id , |m| m.nickname(&new_nickname)).await.unwrap();
                                         let _msg = msg.edit(ctx, |new_msg|
                                             new_msg.content(format!("{} se quitó su apodo\nCambio aprobado por {}" , Mention::from(command.user.id) , Mention::from(reaction.user_id.unwrap())))).await;
-                                        return None
+                                        None
                                     } else {
                                         command.guild_id.unwrap().edit_member(&ctx , command.user.id , |m| m.nickname(&new_nickname)).await.unwrap();
                                         let _msg = msg.edit(ctx, |new_msg|
                                             new_msg.content(format!("{} cambió su apodo a {}\nCambio aprobado por {}" , Mention::from(command.user.id) , new_nickname , Mention::from(reaction.user_id.unwrap())))).await;
-                                        return None
+                                        None
                                     }
                                 }
                                 "🥶" => {
-                                    if new_nickname == "" {
+                                    if new_nickname.is_empty() {
                                         let _msg = msg.edit(ctx, |new_msg|
                                             new_msg.content(format!("{} no pudo quitarse su apodo\nCambio denegado por {}" , Mention::from(command.user.id) , Mention::from(reaction.user_id.unwrap())))).await;
-                                        return None
+                                        None
                                     } else {
                                         let _msg = msg.edit(ctx, |new_msg|
                                             new_msg.content(format!("{} no pudo cambiar su apodo a {}\nCambio denegado por {}" , Mention::from(command.user.id) , new_nickname , Mention::from(reaction.user_id.unwrap())))).await;
-                                        return None
+                                        None
                                     }
                                 }
                                 //Si discord devuelve que alguna reaccion que no esté registrada, mandamos error y avisamos por el chat
                                 _ => {
                                     println!("ERROR EN CALLME, EMOJI NO CORRESPONDIENTE");
                                     let _msg = msg.edit(ctx, |new_msg|
-                                        new_msg.content(format!("ERROR, diganle al Lucas"))).await;
-                                    return None
+                                        new_msg.content("ERROR, diganle al Lucas".to_string())).await;
+                                    None
                                 }
                             }
                         } else {
                             let _msg = msg.edit(ctx, |new_msg|
-                                new_msg.content(format!("AAAAAAAAAAA WATAFAK"))).await;
+                                new_msg.content("AAAAAAAAAAA WATAFAK".to_string())).await;
                             println!("Reaction received: {:?}" , reaction_action);
                             None
                         }
@@ -161,7 +161,7 @@ pub async fn run(command: &ApplicationCommandInteraction , ctx: &serenity::clien
                         // Case exists if await_reaction reaches timeout
                         let _msg = msg.edit(ctx, |new_msg|
                             new_msg.content(format!("{} no pudo cambiar su apodo a {}\nTiempo de espera sobrepasado..." , Mention::from(command.user.id) , new_nickname))).await;
-                        return None
+                        None
                     }
             }
         }

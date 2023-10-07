@@ -18,7 +18,7 @@ pub async fn run(command: &ApplicationCommandInteraction , _ctx: &serenity::clie
         Ok(file) => {file}
         Err(_error) => {
             return CommandResponse{
-                result_string: format!("Couldn't access trusted file..."),
+                result_string: "Couldn't access trusted file...".to_string(),
                 ephemeral: true
             }
         }
@@ -37,8 +37,8 @@ pub async fn run(command: &ApplicationCommandInteraction , _ctx: &serenity::clie
             }
         }
     }
-    return CommandResponse{
-        result_string: format!("No tienes permiso para usar este comando :("),
+    CommandResponse{
+        result_string: "No tienes permiso para usar este comando :(".to_string(),
         ephemeral: true
     }
 }

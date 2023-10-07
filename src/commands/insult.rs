@@ -73,7 +73,7 @@ pub async fn run(
                             Err(error) => {
                                 println!("COULDN'T UPDATE DATABASE\n{}" , error);
                                 CommandResponse {
-                                    result_string: format!("No se pudo actualizar la base de datos"),
+                                    result_string: "No se pudo actualizar la base de datos".to_string(),
                                     ephemeral: true
                                 }
                             }
@@ -89,14 +89,14 @@ pub async fn run(
                 }
             } else {
                 CommandResponse {
-                    result_string: format!("Comando no implementado para no-totys..."),
+                    result_string: "Comando no implementado para no-totys...".to_string(),
                     ephemeral: true
                 }
             }
         } else {
             println!("ERROR 102 INSULT COMMAND, discord sent no user...");
             CommandResponse{
-                result_string: format!("ERROR 102"),
+                result_string: "ERROR 102".to_string(),
                 ephemeral: true
             }
         }

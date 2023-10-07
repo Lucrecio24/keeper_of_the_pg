@@ -21,7 +21,7 @@ pub async fn run(
             let mut guild_members = command.guild_id.unwrap().members_iter(&ctx).boxed();
             while let Some(member_result) = guild_members.next().await {
                 let member_id = &member_result.as_ref().unwrap().user.id.as_u64().to_string();
-                let member_rank_id = keeper_of_the_pg::get_rank(&ctx , member_result.as_ref().unwrap().clone()).1.as_u64().to_string();
+                let member_rank_id = keeper_of_the_pg::get_rank(ctx , member_result.as_ref().unwrap().clone()).1.as_u64().to_string();
 
 
                 let query_result = sqlx::query!(
@@ -47,14 +47,14 @@ pub async fn run(
                     println!("Inserted into the database: {}" , member_result.as_ref().unwrap().user.name)
                 }
             }
-            return CommandResponse{
+            CommandResponse{
                 result_string: "Database updated.".to_string(),
                 ephemeral: true
             }
         }
         _ => {
-            return CommandResponse{
-                result_string: format!("No tienes suficiente rango para usar este comando."),
+            CommandResponse{
+                result_string: "No tienes suficiente rango para usar este comando.".to_string(),
                 ephemeral: true
             }
         }

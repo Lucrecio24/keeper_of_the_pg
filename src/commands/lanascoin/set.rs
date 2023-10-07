@@ -21,7 +21,7 @@ pub async fn run(
         }
         _ => {
             return CommandResponse{
-            result_string: format!("No tienes suficiente rango para usar este comando."),
+            result_string: "No tienes suficiente rango para usar este comando.".to_string(),
             ephemeral: true
             }
         }
@@ -30,14 +30,14 @@ pub async fn run(
     // Checking if member was inputted
     if command.data.options[0].options.get(0).is_none() {
         return CommandResponse{
-            result_string: format!("Miembro a buscar no ingresado"),
+            result_string: "Miembro a buscar no ingresado".to_string(),
             ephemeral: true
         }
     }
     // Checking if amount was inputted
     if command.data.options[0].options.get(1).is_none() {
         return CommandResponse{
-            result_string: format!("Cantidad a sumar no ingresada"),
+            result_string: "Cantidad a sumar no ingresada".to_string(),
             ephemeral: true
         }
     }
@@ -58,15 +58,15 @@ pub async fn run(
         // Checking if value is positive, and if not, returning invalid amount.
         if value < &0 {
             return CommandResponse{
-                result_string: format!("Amount value invalid"),
+                result_string: "Amount value invalid".to_string(),
                 ephemeral: true
             }
         }
         // Saving value as new_amount.
-        new_amount = *value as i64;
+        new_amount = *value;
     } else {
         return CommandResponse{
-            result_string: format!("Amount value invalid"),
+            result_string: "Amount value invalid".to_string(),
             ephemeral: true
         }
     }
@@ -91,24 +91,24 @@ pub async fn run(
                 // Returning successful result
                 Ok(_) => {
                     
-                    return CommandResponse{
-                        result_string: format!("{} ahora tiene {}LanasCoins" , Mention::from(target_user.id.clone()) ,&new_amount),
+                    CommandResponse{
+                        result_string: format!("{} ahora tiene {}LanasCoins" , Mention::from(target_user.id) ,&new_amount),
                         ephemeral: true
                     }
                 }
                 // Returning failed result
                 Err(error) => {
                     println!("{}" , error);
-                    return CommandResponse{
-                        result_string: format!("No se pudo actualizar la base de datos con los nuevos valores"),
+                    CommandResponse{
+                        result_string: "No se pudo actualizar la base de datos con los nuevos valores".to_string(),
                         ephemeral: true
                     }
                 }
             }
     } else {
         // If query didn't yield, inform user he's not in the database
-        return CommandResponse{
-            result_string: format!("User not found in database..."),
+        CommandResponse{
+            result_string: "User not found in database...".to_string(),
             ephemeral: true
         }
     }

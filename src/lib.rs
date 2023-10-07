@@ -54,7 +54,7 @@ pub fn get_rank(_ctx: &serenity::client::Context , member: serenity::model::guil
         }
     }
 
-    return (max , rank_id)
+    (max , rank_id)
 }
 
 
@@ -75,5 +75,5 @@ pub fn rank_to_string(rank: serenity::model::id::RoleId) -> String {
     } else if rank == 1000916334537887846 {
         rank_as_string = "RANDOM".to_string();
     }
-    return rank_as_string;
+    rank_as_string
 }
