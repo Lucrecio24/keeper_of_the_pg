@@ -21,7 +21,7 @@ pub async fn run(
         }
         _ => {
             return CommandResponse{
-            result_string: format!("No tienes suficiente rango para usar este comando."),
+            result_string: "No tienes suficiente rango para usar este comando.".to_string(),
             ephemeral: true
             }
         }
@@ -29,7 +29,7 @@ pub async fn run(
 
 
     
-    return CommandResponse{
+    CommandResponse {
         result_string: "Command unfinished".to_string(),
         ephemeral: true
     }

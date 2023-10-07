@@ -53,7 +53,7 @@ impl EventHandler for Handler {
                         "insult" => Some(commands::insult::run(&command, &ctx, &self.database).await),
                         // Lanas coin command subcommands inside
                         "lanascoin" => Some(commands::lanascoin::lanascoin::run(&ctx, &command, &self.database).await),
-                        "server" => Some(commands::server::server::run(&ctx, &command, &self.database, &self.mc_ip , &self.mc_port).await),
+                        "server" => Some(commands::server::server_handler::run(&ctx, &command, &self.database, &self.mc_ip , &self.mc_port).await),
                         // Test command please ignore
                         //"test" => commands::test::run(&ctx , &command , &self.database).await,
                         _ => {
@@ -120,7 +120,7 @@ impl EventHandler for Handler {
                 .create_application_command(|command| commands::insult::register(command))
                 // Lanascoin command subcommands inside
                 .create_application_command(|command| commands::lanascoin::lanascoin::register(command))
-                .create_application_command(|command| commands::server::server::register(command))
+                .create_application_command(|command| commands::server::server_handler::register(command))
             // Test command please ignore
             //.create_application_command(|command| commands::test::register(command))
         })
