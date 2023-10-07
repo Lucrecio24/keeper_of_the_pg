@@ -20,7 +20,7 @@ pub async fn run(
         }
         _ => {
             return CommandResponse{
-            result_string: format!("No tienes suficiente rango para usar este comando."),
+            result_string: "No tienes suficiente rango para usar este comando.".to_string(),
             ephemeral: true
             }
         }
@@ -29,14 +29,14 @@ pub async fn run(
     // Checking if member was inputted
     if command.data.options[0].options.get(0).is_none() {
         return CommandResponse{
-            result_string: format!("Miembro a buscar no ingresado"),
+            result_string: "Miembro a buscar no ingresado".to_string(),
             ephemeral: true
         }
     }
     // Checking if amount was inputted
     if command.data.options[0].options.get(1).is_none() {
         return CommandResponse{
-            result_string: format!("Cantidad a sumar no ingresada"),
+            result_string: "Cantidad a sumar no ingresada".to_string(),
             ephemeral: true
         }
     }
@@ -57,7 +57,7 @@ pub async fn run(
         // Checking if value is positive, and if not, returning invalid amount.
         if value < &1 {
             return CommandResponse{
-                result_string: format!("Amount value invalid"),
+                result_string: "Amount value invalid".to_string(),
                 ephemeral: true
             }
         }
@@ -65,7 +65,7 @@ pub async fn run(
         amount_to_add = *value as u64;
     } else {
         return CommandResponse{
-            result_string: format!("Amount value invalid"),
+            result_string: "Amount value invalid".to_string(),
             ephemeral: true
         }
     }
@@ -103,7 +103,7 @@ pub async fn run(
                 Ok(_) => {
                     
                     CommandResponse{
-                        result_string: format!("Se le han sumado {} LanasCoins a {}" , &amount_to_add , Mention::from(target_user.id.clone())),
+                        result_string: format!("Se le han sumado {} LanasCoins a {}" , &amount_to_add , Mention::from(target_user.id)),
                         ephemeral: true
                     }
                 }
@@ -111,22 +111,22 @@ pub async fn run(
                 Err(error) => {
                     println!("{}" , error);
                     CommandResponse{
-                        result_string: format!("No se pudo actualizar la base de datos con los nuevos valores"),
+                        result_string: "No se pudo actualizar la base de datos con los nuevos valores".to_string(),
                         ephemeral: true
                     }
                 }
             }
         } else {
             // If query didn't yield, inform user he's not in the database
-            return CommandResponse{
-                result_string: format!("User not found in database..."),
+            CommandResponse{
+                result_string: "User not found in database...".to_string(),
                 ephemeral: true
             }
         }
     } else {
             //If query didn't yield, inform user
-        return CommandResponse{
-            result_string: format!("User not found in database..."),
+        CommandResponse{
+            result_string: "User not found in database...".to_string(),
             ephemeral: true
         }
     }
