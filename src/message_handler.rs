@@ -35,6 +35,11 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
                 println!("Error sending message {:?}", error);
             }
         }
+        if msg.content.to_lowercase().contains("chechi") {
+            if let Err(error) = msg.channel_id.say(&ctx, "Chechi barre tu meao del piso").await {
+                println!("Error sending message {:?}", error);
+            }
+        }
         if msg.content.to_lowercase().contains("dbd") {
             if let Err(error) = msg.react(ctx, ReactionType::from(parse_emoji("<:tired:1036702905530597447>").unwrap())).await {
                 println!("Error sending message {:?}" , error)
