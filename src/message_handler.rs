@@ -34,6 +34,11 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
             if let Err(error) = msg.channel_id.say(&ctx, "Primo god").await {
                 println!("Error sending message {:?}", error);
             }
+        }        
+        if msg.content.to_lowercase().contains("franco") {
+            if let Err(error) = msg.channel_id.say(&ctx, "FrancoGPT").await {
+                println!("Error sending message {:?}", error);
+            }
         }
         if msg.content.to_lowercase().contains("chechi") {
             if let Err(error) = msg.channel_id.say(&ctx, "Chechi barre tu meao del piso").await {
