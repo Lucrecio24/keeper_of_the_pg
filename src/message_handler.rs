@@ -1,5 +1,6 @@
 extern crate serenity;
 
+use rand::Rng;
 use serenity::{
     model::channel::{
         Message,
@@ -46,8 +47,33 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
             }
         }
         if msg.content.to_lowercase().contains("dbd") {
-            if let Err(error) = msg.react(ctx, ReactionType::from(parse_emoji("<:tired:1036702905530597447>").unwrap())).await {
+            if let Err(error) = msg.react(&ctx, ReactionType::from(parse_emoji("<:tired:1036702905530597447>").unwrap())).await {
                 println!("Error sending message {:?}" , error)
+            }
+        }
+        if msg.mentions.contains(&serenity::model::prelude::UserId::from(270781465896288256).to_user(&ctx).await.unwrap()) {
+        // Fotos huevo con tocino
+            let elected_photo: &str;
+            {
+                let mut rng = rand::thread_rng();
+                let beok_photo_list = vec![
+                    "https://imgur.com/QaAgTKA",
+                    "https://imgur.com/yHzrmsp",
+                    "https://imgur.com/3rjJec4",
+                    "https://imgur.com/7qtPQWf",
+                    "https://imgur.com/Mvrl8bU",
+                    "https://imgur.com/mANUwCc"];
+                elected_photo = beok_photo_list[rng.gen_range(0..6)];
+            }
+            if let Err(error) = msg.reply(&ctx, elected_photo).await {
+                    println!("Error sending message {:?}" , error)
+            }
+        }
+        if msg.mentions.contains(&serenity::model::prelude::UserId::from(228684802520383489).to_user(&ctx).await.unwrap()) {
+            // Fotos huevo con tocino
+            let elected_photo: &str = "https://tenor.com/gdXo1Jz9Bd4.gif";
+            if let Err(error) = msg.reply(ctx, elected_photo).await {
+                    println!("Error sending message {:?}" , error)
             }
         }
     }
