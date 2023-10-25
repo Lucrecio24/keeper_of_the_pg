@@ -69,7 +69,8 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
                     println!("Error sending message {:?}" , error)
             }
         }
-        if msg.mentions.contains(&serenity::model::prelude::UserId::from(228684802520383489).to_user(&ctx).await.unwrap()) {
+        //Si contiene una mention al lanas, reaccionar con hakiri dance gif
+        if msg.mentions.contains(&serenity::model::prelude::UserId::from(228684802520383489).to_user(&ctx).await.unwrap()) && msg.kind == serenity::model::channel::MessageType::Regular{
             // Fotos huevo con tocino
             let elected_photo: &str = "https://tenor.com/gdXo1Jz9Bd4.gif";
             if let Err(error) = msg.reply(ctx, elected_photo).await {
