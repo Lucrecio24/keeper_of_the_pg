@@ -51,7 +51,7 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
                 println!("Error sending message {:?}" , error)
             }
         }
-        if msg.mentions.contains(&serenity::model::prelude::UserId::from(270781465896288256).to_user(&ctx).await.unwrap()) {
+        if msg.mentions.contains(&serenity::model::prelude::UserId::from(270781465896288256).to_user(&ctx).await.unwrap()) && msg.kind == serenity::model::channel::MessageType::Regular {
         // Fotos huevo con tocino
             let elected_photo: &str;
             {
@@ -70,10 +70,18 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
             }
         }
         //Si contiene una mention al lanas, reaccionar con hakiri dance gif
-        if msg.mentions.contains(&serenity::model::prelude::UserId::from(228684802520383489).to_user(&ctx).await.unwrap()) && msg.kind == serenity::model::channel::MessageType::Regular{
-            // Fotos huevo con tocino
+        if msg.mentions.contains(&serenity::model::prelude::UserId::from(228684802520383489).to_user(&ctx).await.unwrap()) && msg.kind == serenity::model::channel::MessageType::Regular {
+            // Gif hakiri dance
             let elected_photo: &str = "https://tenor.com/gdXo1Jz9Bd4.gif";
-            if let Err(error) = msg.reply(ctx, elected_photo).await {
+            if let Err(error) = msg.reply(&ctx, elected_photo).await {
+                    println!("Error sending message {:?}" , error)
+            }
+        }
+        //Si contiene una mention al toty, reaccionar con la locura
+        if msg.mentions.contains(&serenity::model::prelude::UserId::from(408088734722949132).to_user(&ctx).await.unwrap()) && msg.kind == serenity::model::channel::MessageType::Regular {
+            // Gif locura del payaso
+            let elected_photo: &str = "https://tenor.com/nLfb5tspZ3j.gif";
+            if let Err(error) = msg.reply(&ctx, elected_photo).await {
                     println!("Error sending message {:?}" , error)
             }
         }
