@@ -1,6 +1,7 @@
 use keeper_of_the_pg::*;
 mod commands;
 mod message_handler;
+mod new_member_handler;
 
 use dotenvy::dotenv;
 use serenity::async_trait;
@@ -12,7 +13,8 @@ use serenity::{
         },
         channel::Message,
         gateway::Ready,
-        id::GuildId
+        id::GuildId,
+        guild::Member
     },
     prelude::*,
 };
@@ -29,7 +31,9 @@ impl EventHandler for Handler {
     async fn message(&self, ctx: Context, msg: Message) {
         crate::message_handler::run(ctx,msg).await;
     }
-
+    async fn guild_member_addition(&self , ctx: Context , new_member: Member){
+        crate::new_member_handler::run(ctx , new_member).await;
+    }
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
         match interaction {
             Interaction::Ping(_) => {println!("Ping interaction")}
