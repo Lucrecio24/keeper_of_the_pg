@@ -12,10 +12,7 @@ use serenity::{
                 CommandDataOptionValue
             }
         },
-        application::{
-            //command::Command,
-            interaction::{InteractionResponseType}
-        }
+        application::InteractionResponseType
     }
 };
 
