@@ -7,9 +7,7 @@ use std::io::BufRead;
 
 
 use serenity::builder::CreateApplicationCommand;
-use serenity::model::prelude::interaction::application_command::{
-    ApplicationCommandInteraction,
-};
+use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
 
 pub async fn run(command: &ApplicationCommandInteraction , _ctx: &serenity::client::Context) -> CommandResponse {
 
