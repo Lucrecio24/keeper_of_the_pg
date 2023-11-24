@@ -1,3 +1,5 @@
+use crate::discord_bot::*;
+
 use serenity::builder::CreateApplicationCommand;
 use serenity::model::prelude::command::CommandOptionType;
 use serenity::model::prelude::interaction::application_command::{
@@ -6,8 +8,7 @@ use serenity::model::prelude::interaction::application_command::{
 };
 //use serenity::model::mention::Mention;
 
-use keeper_of_the_pg::*;
-use crate::commands::lanascoin::*;
+use crate::discord_bot::commands::lanascoin::*;
 
 pub async fn run(
     ctx: &serenity::client::Context,

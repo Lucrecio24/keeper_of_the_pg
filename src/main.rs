@@ -1,9 +1,8 @@
-mod commands;
-mod message_handler;
-mod new_member_handler;
-mod interaction_handler;
+mod discord_bot;
+mod axum_webserver;
 
 use dotenvy::dotenv;
+use tokio::task;
 use serenity::async_trait;
 use serenity::{
     model::{
@@ -29,13 +28,13 @@ pub struct Handler {
 #[async_trait]
 impl EventHandler for Handler {
     async fn message(&self, ctx: Context, msg: Message) {
-        crate::message_handler::run(ctx,msg).await;
+        crate::discord_bot::message_handler::run(ctx,msg).await;
     }
     async fn guild_member_addition(&self , ctx: Context , new_member: Member){
-        crate::new_member_handler::run(ctx , new_member).await;
+        crate::discord_bot::new_member_handler::run(ctx , new_member).await;
     }
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
-        crate::interaction_handler::run(self , ctx , interaction).await;
+        crate::discord_bot::interaction_handler::run(self , ctx , interaction).await;
     }
 
     async fn ready(&self, ctx: Context, ready: Ready) {
@@ -45,14 +44,14 @@ impl EventHandler for Handler {
 
         let _guild_commands = GuildId::set_application_commands(&guild_id, &ctx.http, |commands| {
             commands
-                .create_application_command(|command| commands::updatedb::register(command))
-                .create_application_command(|command| commands::ping::register(command))
-                .create_application_command(|command| commands::callme::register(command))
-                .create_application_command(|command| commands::id::register(command))
-                .create_application_command(|command| commands::insult::register(command))
+                .create_application_command(|command| discord_bot::commands::updatedb::register(command))
+                .create_application_command(|command| discord_bot::commands::ping::register(command))
+                .create_application_command(|command| discord_bot::commands::callme::register(command))
+                .create_application_command(|command| discord_bot::commands::id::register(command))
+                .create_application_command(|command| discord_bot::commands::insult::register(command))
                 // Lanascoin command subcommands inside
-                .create_application_command(|command| commands::lanascoin::lanascoin_handler::register(command))
-                .create_application_command(|command| commands::server::server_handler::register(command))
+                .create_application_command(|command| discord_bot::commands::lanascoin::lanascoin_handler::register(command))
+                .create_application_command(|command| discord_bot::commands::server::server_handler::register(command))
             // Test command please ignore
             //.create_application_command(|command| commands::test::register(command))
         })
@@ -63,7 +62,7 @@ impl EventHandler for Handler {
         let _global_commands = Command::set_global_application_commands(&ctx.http, |commands| {
             commands
                 //.create_application_command(|command| commands::wonderful_command::register(command))
-                .create_application_command(|command| commands::ip::register(command))
+                .create_application_command(|command| discord_bot::commands::ip::register(command))
         })
         .await;
 
@@ -113,4 +112,12 @@ async fn main() {
     if let Err(why) = client.start().await {
         println!("Client error: {:?}", why);
     }
+    
+    let client_context = client.cache_and_http.http.clone();
+
+    let bot_task = task::spawn(async move {
+        if let Err(why) = client.start().await {
+            println!("Client error: {:?}", why);
+        }
+    });
 }

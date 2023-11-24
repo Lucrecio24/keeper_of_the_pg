@@ -1,6 +1,6 @@
-use keeper_of_the_pg::*;
+use crate::discord_bot::*;
 use serenity::builder::CreateApplicationCommand;
-use serenity::model::prelude::interaction::application_command::{CommandDataOption};
+use serenity::model::prelude::interaction::application_command::CommandDataOption;
 
 pub fn run(_options: &[CommandDataOption]) -> CommandResponse {
     CommandResponse{

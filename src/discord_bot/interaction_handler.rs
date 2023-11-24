@@ -3,7 +3,8 @@ use serenity::{
         application::interaction::{Interaction, InteractionResponseType},
     prelude::*,
 };
-use keeper_of_the_pg::CommandResponse;
+use crate::discord_bot::CommandResponse;
+use crate::discord_bot::commands as commands;
 
 pub async fn run(bot: &crate::Handler , ctx: Context, interaction: Interaction) {
     match interaction {
@@ -19,16 +20,16 @@ pub async fn run(bot: &crate::Handler , ctx: Context, interaction: Interaction) 
             if (valid_channels.contains(&command.channel_id.0)) || (command.guild_id.is_none()) {
                 content = match command.data.name.as_str() {
                     // Receiving of reaction-dependant commands (rd commands) processed here
-                    "callme" => crate::commands::callme::run(&command, &ctx).await,
+                    "callme" => commands::callme::run(&command, &ctx).await,
                     // Receiving of non-reaction-dependant commands (nrd commands) processed here
-                    "ping" => Some(crate::commands::ping::run(&command.data.options)),
-                    "id" => Some(crate::commands::id::run(&command.data.options)),
-                    "ip" => Some(crate::commands::ip::run(&command, &ctx).await),
-                    "updatedb" => Some(crate::commands::updatedb::run(&ctx, &command, &bot.database).await),
-                    "insult" => Some(crate::commands::insult::run(&command, &ctx, &bot.database).await),
+                    "ping" => Some(commands::ping::run(&command.data.options)),
+                    "id" => Some(commands::id::run(&command.data.options)),
+                    "ip" => Some(commands::ip::run(&command, &ctx).await),
+                    "updatedb" => Some(commands::updatedb::run(&ctx, &command, &bot.database).await),
+                    "insult" => Some(commands::insult::run(&command, &ctx, &bot.database).await),
                     // Lanas coin command subcommands inside
-                    "lanascoin" => Some(crate::commands::lanascoin::lanascoin_handler::run(&ctx, &command, &bot.database).await),
-                    "server" => Some(crate::commands::server::server_handler::run(&ctx, &command, &bot.database, &bot.mc_ip , &bot.mc_port).await),
+                    "lanascoin" => Some(commands::lanascoin::lanascoin_handler::run(&ctx, &command, &bot.database).await),
+                    "server" => Some(commands::server::server_handler::run(&ctx, &command, &bot.database, &bot.mc_ip , &bot.mc_port).await),
                     // Test command please ignore
                     //"test" => commands::test::run(&ctx , &command , &self.database).await,
                     _ => {

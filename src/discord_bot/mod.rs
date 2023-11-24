@@ -1,3 +1,9 @@
+pub mod message_handler;
+pub mod interaction_handler;
+pub mod new_member_handler;
+pub mod commands;
+
+
 extern crate dotenvy;
 use serenity::model::id::RoleId;
 

@@ -1,12 +1,6 @@
-use keeper_of_the_pg::*;
+use crate::discord_bot::*;
+use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
 
-//use serenity::builder::CreateApplicationCommand;
-//use serenity::model::prelude::command::CommandOptionType;
-use serenity::model::prelude::interaction::application_command::{
-    ApplicationCommandInteraction,
-    //CommandDataOptionValue,
-};
-//use serenity::model::prelude::Mention;
 
 pub async fn run(
     ctx: &serenity::client::Context,

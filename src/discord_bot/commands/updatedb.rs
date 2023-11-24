@@ -1,12 +1,9 @@
-
-use serenity::builder::CreateApplicationCommand;
-use serenity::model::prelude::interaction::application_command::{
-    ApplicationCommandInteraction,
+use crate::discord_bot::*;
+use serenity::{
+    builder::CreateApplicationCommand,
+    model::prelude::interaction::application_command::ApplicationCommandInteraction,
+    futures::StreamExt
 };
-use serenity::futures::StreamExt;
-
-
-use keeper_of_the_pg::*;
 
 pub async fn run(
     ctx: &serenity::client::Context,
@@ -21,7 +18,7 @@ pub async fn run(
             let mut guild_members = command.guild_id.unwrap().members_iter(&ctx).boxed();
             while let Some(member_result) = guild_members.next().await {
                 let member_id = &member_result.as_ref().unwrap().user.id.as_u64().to_string();
-                let member_rank_id = keeper_of_the_pg::get_rank(ctx , member_result.as_ref().unwrap().clone()).1.as_u64().to_string();
+                let member_rank_id = get_rank(ctx , member_result.as_ref().unwrap().clone()).1.as_u64().to_string();
 
 
                 let query_result = sqlx::query!(

@@ -1,4 +1,4 @@
-use keeper_of_the_pg::*;
+use crate::discord_bot::*;
 use serenity::builder::CreateApplicationCommand;
 use serenity::model::prelude::command::CommandOptionType;
 use serenity::model::prelude::interaction::application_command::{

@@ -1,4 +1,4 @@
-use keeper_of_the_pg::*;
+use crate::discord_bot::*;
 use mc_query::query::stat_full;
 
 //use serenity::builder::CreateApplicationCommand;

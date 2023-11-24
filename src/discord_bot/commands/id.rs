@@ -1,10 +1,10 @@
+use crate::discord_bot::*;
 use serenity::builder::CreateApplicationCommand;
 use serenity::model::prelude::command::CommandOptionType;
 use serenity::model::prelude::interaction::application_command::{
     CommandDataOption,
     CommandDataOptionValue,
 };
-use keeper_of_the_pg::*;
 
 
 pub fn run(options: &[CommandDataOption]) -> CommandResponse {

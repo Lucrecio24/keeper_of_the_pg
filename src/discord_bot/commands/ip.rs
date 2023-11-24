@@ -1,6 +1,5 @@
-use keeper_of_the_pg::*;
+use crate::discord_bot::*;
 use public_ip::addr;
-
 use tokio::fs::File;
 use std::io::BufReader;
 use std::io::BufRead;
