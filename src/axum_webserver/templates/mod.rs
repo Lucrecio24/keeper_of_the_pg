@@ -1,5 +1,6 @@
 //use axum::extract::Form;
 use axum::{
+    extract::{State , Form},
     body::StreamBody,
     http::{header, StatusCode},
     response::{IntoResponse , Html},
@@ -7,7 +8,12 @@ use axum::{
 use hyper::Response;
 use tokio_util::io::ReaderStream;
 use tokio::fs::File;
+use std::sync::Arc;
 
+pub struct FormData {
+    channel_id: u64,
+    message: String
+}
 
 pub async fn root() -> Html<&'static str> {Html(std::include_str!("index.html"))}
 
@@ -35,6 +41,29 @@ pub async fn get_bot() -> Html<&'static str> {Html(std::include_str!("bot.html")
         channel_id, message
     ))
 }*/
+pub async fn post_bot(form: Form<FormData> , State(context): State<Arc<serenity::http::Http>>) -> impl IntoResponse {
+    let data = form.0;
+
+    // Process the form data
+    let channel_id: &u64 = &data.channel_id;
+    let message = &data.message;
+
+    
+    /* Not necessary
+    let data_pack = to_vec(&data).unwrap();
+    // Connect to Redis
+    let client = redis::Client::open("redis://127.0.0.1/").unwrap();
+    let mut con = client.get_async_connection().await.unwrap();
+
+    // Publish the message to the Redis channel
+    let _: () = con.publish("send_message", data_pack).await.unwrap();
+    */
+    // Create an HTML response with the processed data
+    Html(format!(
+        "<h1>Form Data Received</h1><p>Channel ID: {}</p><p>Message: {}</p>",
+        channel_id, message
+    ))
+}
 pub async fn fallback() -> &'static str {"ERROR 404: Toty not found"}
 
 
