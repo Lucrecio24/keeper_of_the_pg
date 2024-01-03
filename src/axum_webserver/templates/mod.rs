@@ -1,15 +1,16 @@
 //use axum::extract::Form;
 use axum::{
     extract::{State , Form},
-    body::StreamBody,
-    http::{header, StatusCode},
+//    http::{header, StatusCode},
     response::{IntoResponse , Html},
 };
-use hyper::Response;
-use tokio_util::io::ReaderStream;
-use tokio::fs::File;
+//use hyper::Response;
+//use tokio_util::io::ReaderStream;
+//use tokio::fs::File;
 use std::sync::Arc;
+use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize, Debug)]
 pub struct FormData {
     channel_id: u64,
     message: String
@@ -19,46 +20,21 @@ pub async fn root() -> Html<&'static str> {Html(std::include_str!("index.html"))
 
 ////BOT PAGES
 pub async fn get_bot() -> Html<&'static str> {Html(std::include_str!("bot.html"))}
-//POST (DEPRECATED, SENDS MESSAGE VIA REDIS WITH INTENDED BOT MESSAGE.)
-/*pub async fn post_bot(form: Form<FormData>) -> impl IntoResponse {
+
+#[axum_macros::debug_handler]
+pub async fn send_message_to_channel_handler(State(context): State<Arc<serenity::http::Http>> , form: Form<FormData>) -> impl IntoResponse {
+    // Getting data from form received from post
     let data = form.0;
 
     // Process the form data
-    let channel_id: &u64 = &data.channel_id;
+    let channel_id: u64 = data.channel_id;
     let message = &data.message;
 
-    let data_pack = to_vec(&data).unwrap();
-    // Connect to Redis
-    let client = redis::Client::open("redis://127.0.0.1/").unwrap();
-    let mut con = client.get_async_connection().await.unwrap();
+    //Sending message via the entered channel id, if channel id is valid
+    if let Err(_) = serenity::model::id::ChannelId::from(channel_id).say(context , format!("{}" , message)).await{
+        println!("Couldn't send message to channel_id = {}" , channel_id);
+    }
 
-    // Publish the message to the Redis channel
-    let _: () = con.publish("send_message", data_pack).await.unwrap();
-
-    // Create an HTML response with the processed data
-    Html(format!(
-        "<h1>Form Data Received</h1><p>Channel ID: {}</p><p>Message: {}</p>",
-        channel_id, message
-    ))
-}*/
-pub async fn post_bot(form: Form<FormData> , State(context): State<Arc<serenity::http::Http>>) -> impl IntoResponse {
-    let data = form.0;
-
-    // Process the form data
-    let channel_id: &u64 = &data.channel_id;
-    let message = &data.message;
-
-    
-    /* Not necessary
-    let data_pack = to_vec(&data).unwrap();
-    // Connect to Redis
-    let client = redis::Client::open("redis://127.0.0.1/").unwrap();
-    let mut con = client.get_async_connection().await.unwrap();
-
-    // Publish the message to the Redis channel
-    let _: () = con.publish("send_message", data_pack).await.unwrap();
-    */
-    // Create an HTML response with the processed data
     Html(format!(
         "<h1>Form Data Received</h1><p>Channel ID: {}</p><p>Message: {}</p>",
         channel_id, message
@@ -66,7 +42,7 @@ pub async fn post_bot(form: Form<FormData> , State(context): State<Arc<serenity:
 }
 pub async fn fallback() -> &'static str {"ERROR 404: Toty not found"}
 
-
+/*
 pub async fn get_archivo() -> Result<Response<StreamBody<ReaderStream<File>>> , (StatusCode, String)> {
     // `File` implements `AsyncRead`
     let file = match File::open("wakfu_ui_skins.zip").await {
@@ -94,3 +70,4 @@ pub async fn get_archivo() -> Result<Response<StreamBody<ReaderStream<File>>> , 
         
     Ok(response)
 }
+*/
