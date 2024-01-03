@@ -104,29 +104,18 @@ async fn main() {
         .event_handler(bot)
         .await
         .expect("Error creating client");
-
-    // Finally, start a single shard, and start listening to events.
-    //
-    // Shards will automatically attempt to reconnect, and will perform
-    // exponential backoff until it reconnects.
-    if let Err(why) = client.start().await {
-        println!("Client error: {:?}", why);
-    }
     
 
     let client_context = client.cache_and_http.http.clone();
-
     let bot_task = task::spawn(async move {
         if let Err(why) = client.start().await {
             println!("Client error: {:?}", why);
         }
     });
-
     let axum_task = task::spawn(async move {
         if let Err(why) = crate::axum_webserver::start_webserver(client_context).await{
             println!("Couldn't start webserver: {:?}" , why);
         }
     });
-
     tokio::try_join!(bot_task , axum_task).unwrap();
 }
