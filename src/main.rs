@@ -113,6 +113,7 @@ async fn main() {
         println!("Client error: {:?}", why);
     }
     
+
     let client_context = client.cache_and_http.http.clone();
 
     let bot_task = task::spawn(async move {
@@ -120,4 +121,12 @@ async fn main() {
             println!("Client error: {:?}", why);
         }
     });
+
+    let axum_task = task::spawn(async move {
+        if let Err(why) = crate::axum_webserver::start_webserver(client_context).await{
+            println!("Couldn't start webserver: {:?}" , why);
+        }
+    });
+
+    tokio::try_join!(bot_task , axum_task).unwrap();
 }
