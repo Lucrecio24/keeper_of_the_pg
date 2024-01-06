@@ -5,10 +5,10 @@ use std::io::BufReader;
 use std::io::BufRead;
 
 
-use serenity::builder::CreateApplicationCommand;
-use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
+use serenity::builder::CreateCommand;
+use serenity::model::application::CommandInteraction;
 
-pub async fn run(command: &ApplicationCommandInteraction , _ctx: &serenity::client::Context) -> CommandResponse {
+pub async fn run(command: &CommandInteraction , _ctx: &serenity::client::Context) -> CommandResponse {
 
 
     let tokio_file = match File::open("trusted").await.expect("WTF").try_into_std() {
@@ -27,7 +27,7 @@ pub async fn run(command: &ApplicationCommandInteraction , _ctx: &serenity::clie
 
 
     for line in trusted {
-        if user.id.as_u64().to_string() == line.unwrap(){
+        if user.id.get().to_string() == line.unwrap(){
             return CommandResponse{
                 result_string: format!("Hi! Current ip is: {}" , message_content),
                 ephemeral: true
@@ -40,13 +40,7 @@ pub async fn run(command: &ApplicationCommandInteraction , _ctx: &serenity::clie
     }
 }
 
-pub fn register(command: &mut CreateApplicationCommand) -> &mut CreateApplicationCommand {
-    command
-        .name("ip")
-        .description("Enviarle ip al usuario")/*.create_option(|option| {
-            option
-                .name("id")
-                .description("The user to lookup")
-                .kind(CommandOptionType::User)
-                .required(true) */
+pub fn register() -> CreateCommand {
+    CreateCommand::new("ip")
+        .description("Enviarle ip al usuario")
 }

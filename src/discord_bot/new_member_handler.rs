@@ -1,6 +1,5 @@
-use serenity::model::guild::Member;
-
-pub async fn run(ctx: serenity::client::Context, mut new_member: Member){
+use serenity::all::Member;
+pub async fn run(ctx: serenity::client::Context, new_member: Member){
     //Add new member to the RANDOM and RANDOMS role
     if let Err(x) = new_member.add_role(&ctx, 1000916334537887846).await{
         println!("Couldn't give RANDOM role to {}\nERROR: {x}" , new_member.user.name);

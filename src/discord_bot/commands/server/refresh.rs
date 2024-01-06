@@ -1,15 +1,14 @@
 use crate::discord_bot::*;
-use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
-
+use serenity::all::CommandInteraction;
 
 pub async fn run(
     ctx: &serenity::client::Context,
-    command: &ApplicationCommandInteraction,
+    command: &CommandInteraction,
     _database: &sqlx::SqlitePool)
      -> CommandResponse {
     
     // Checking if actioner member is an admin or mod
-    match get_rank(ctx , command.member.as_ref().unwrap().clone()).0 {
+    match get_rank(ctx , *command.member.as_ref().unwrap().clone()).0 {
         Rank::Admin | Rank::Mod => {
             //If admin or mod we continue with the program
         }

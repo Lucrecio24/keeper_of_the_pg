@@ -5,17 +5,18 @@ use dotenvy::dotenv;
 use tokio::task;
 use serenity::async_trait;
 use serenity::{
-    model::{
-        application::{
-            command::Command,
-            interaction::Interaction,
+        builder::CreateCommand,
+        model::{
+            application::{
+                Command,
+                Interaction,
+            },
+            channel::Message,
+            gateway::Ready,
+            id::GuildId,
+            guild::Member
         },
-        channel::Message,
-        gateway::Ready,
-        id::GuildId,
-        guild::Member
-    },
-    prelude::*,
+        prelude::*,
 };
 use std::env;
 
@@ -40,33 +41,27 @@ impl EventHandler for Handler {
     async fn ready(&self, ctx: Context, ready: Ready) {
         println!("{} is connected!", ready.user.name);
 
-        let guild_id = GuildId(234453296545267714);
+        let guild_id = GuildId::from(234453296545267714);
+        
+        use discord_bot::commands as dbc;
+        let guild_command_list: Vec<CreateCommand> = vec![
+            dbc::lanascoin::register(),
+            dbc::server::register(),
+            
+            
+            dbc::ping::register(),
+            dbc::callme::register(),
+            dbc::id::register(),
+            dbc::insult::register(),
+            dbc::updatedb::register()
+        ];
+        _ = guild_id.set_commands(&ctx, guild_command_list).await;
 
-        let _guild_commands = GuildId::set_application_commands(&guild_id, &ctx.http, |commands| {
-            commands
-                .create_application_command(|command| discord_bot::commands::updatedb::register(command))
-                .create_application_command(|command| discord_bot::commands::ping::register(command))
-                .create_application_command(|command| discord_bot::commands::callme::register(command))
-                .create_application_command(|command| discord_bot::commands::id::register(command))
-                .create_application_command(|command| discord_bot::commands::insult::register(command))
-                // Lanascoin command subcommands inside
-                .create_application_command(|command| discord_bot::commands::lanascoin::lanascoin_handler::register(command))
-                .create_application_command(|command| discord_bot::commands::server::server_handler::register(command))
-            // Test command please ignore
-            //.create_application_command(|command| commands::test::register(command))
-        })
-        .await;
 
-        //        println!("I now have the following guild slash commands: {:#?}", commands);
-
-        let _global_commands = Command::set_global_application_commands(&ctx.http, |commands| {
-            commands
-                //.create_application_command(|command| commands::wonderful_command::register(command))
-                .create_application_command(|command| discord_bot::commands::ip::register(command))
-        })
-        .await;
-
-        //        println!("I created the following global slash command: {:#?}", guild_command);
+        let global_command_list: Vec<CreateCommand> = vec![
+            dbc::ip::register()
+        ];
+        _ = Command::set_global_commands(&ctx , global_command_list).await;
     }
 }
 
@@ -106,7 +101,7 @@ async fn main() {
         .expect("Error creating client");
     
 
-    let client_context = client.cache_and_http.http.clone();
+    let client_context = client.http.clone();
     let bot_task = task::spawn(async move {
         if let Err(why) = client.start().await {
             println!("Client error: {:?}", why);

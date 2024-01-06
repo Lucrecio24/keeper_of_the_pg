@@ -1,24 +1,37 @@
 use crate::discord_bot::*;
 use serenity::{
-    builder::CreateApplicationCommand,
-    model::prelude::interaction::application_command::ApplicationCommandInteraction,
-    futures::StreamExt
+    builder::CreateCommand,
+    all::CommandInteraction,
 };
+use serenity::futures::StreamExt;
 
 pub async fn run(
     ctx: &serenity::client::Context,
-    command: &ApplicationCommandInteraction,
+    command: &CommandInteraction,
     database: &sqlx::SqlitePool
     ) -> CommandResponse {
 
+    //OLD COMMAND
+
+    if get_rank(ctx , *command.member.as_ref().unwrap().clone()).0 != Rank::Admin{
+        return CommandResponse{
+            result_string: "No tienes suficiente rango para usar este comando.".to_string(),
+            ephemeral: true
+        };
+    }
+
         // Check if user is admin
-    match get_rank(ctx , command.member.as_ref().unwrap().clone()).0 {
+    match get_rank(ctx , *command.member.as_ref().unwrap().clone()).0 {
+
         Rank::Admin => {
             //Get stream(?) of guild members and iterate through them
-            let mut guild_members = command.guild_id.unwrap().members_iter(&ctx).boxed();
+            let mut guild_members = command.guild_id.unwrap().members_iter(ctx).boxed();
             while let Some(member_result) = guild_members.next().await {
-                let member_id = &member_result.as_ref().unwrap().user.id.as_u64().to_string();
-                let member_rank_id = get_rank(ctx , member_result.as_ref().unwrap().clone()).1.as_u64().to_string();
+                let Ok(current_member) = &member_result else {
+                    break
+                };
+                let member_id = &current_member.user.id.to_string();
+                let member_rank_id = get_rank(ctx , member_result.as_ref().unwrap().clone()).1.to_string();
 
 
                 let query_result = sqlx::query!(
@@ -58,14 +71,7 @@ pub async fn run(
     }
 }
 
-pub fn register(command: &mut CreateApplicationCommand) -> &mut CreateApplicationCommand {
-    command
-        .name("updatedb")
-        .description("Updates database with every member in guild")/*.create_option(|option| {
-            option
-                .name("id")
-                .description("The user to lookup")
-                .kind(CommandOptionType::User)
-                .required(true)
-    }) */
+pub fn register() -> CreateCommand {
+    CreateCommand::new("updatedb")
+        .description("Updates database with every member in guild")
 }

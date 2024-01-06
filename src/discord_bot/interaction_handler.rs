@@ -1,6 +1,6 @@
 use serenity::{
-    model::
-        application::interaction::{Interaction, InteractionResponseType},
+    builder::{CreateInteractionResponse , CreateInteractionResponseMessage},
+    all::Interaction,
     prelude::*,
 };
 use crate::discord_bot::CommandResponse;
@@ -9,21 +9,58 @@ use crate::discord_bot::commands as commands;
 pub async fn run(bot: &crate::Handler , ctx: Context, interaction: Interaction) {
     match interaction {
         Interaction::Ping(_) => {println!("Ping interaction")}
-        Interaction::ApplicationCommand(command) => {
+        Interaction::Command(command) => {
             let content: Option<CommandResponse>;
-            let valid_channels: Vec<u64> = [1087524950425997383 , 959921482551668756 , 1004982773121032242].to_vec();
+            let valid_channels: Vec<u64> = vec![1087524950425997383 , 959921482551668756 , 1004982773121032242];
+            let Ok(keeper_of_the_pg_channel) = serenity::model::id::ChannelId::from(1087524950425997383).to_channel(&ctx).await else {
+                todo!()
+            };
+            let mut command_response = CreateInteractionResponseMessage::new();
 
-            let keeper_of_the_pg_channel = serenity::model::id::ChannelId(1087524950425997383)
-                .to_channel(&ctx)
-                .await
-                .unwrap();
-            if (valid_channels.contains(&command.channel_id.0)) || (command.guild_id.is_none()) {
+
+            if !(valid_channels.contains(&command.channel_id.get())) {    
+                command_response = command_response.content(format!("Canal equivocado. Prueba por {}", keeper_of_the_pg_channel)).ephemeral(true);
+                let _ = command.create_response(&ctx , CreateInteractionResponse::Message(command_response.clone())).await;
+            }
+
+            content = match command.data.name.as_str() {
+                // Receiving of reaction-dependant commands (rd commands) processed here
+                "callme" => commands::callme::run(&command, &ctx).await,
+                // Receiving of non-reaction-dependant commands (nrd commands) processed here
+                "ping" => Some(commands::ping::run(&command.data.options)),
+                "id" => Some(commands::id::run(&command , &ctx).await),
+                "ip" => Some(commands::ip::run(&command, &ctx).await),
+                "updatedb" => Some(commands::updatedb::run(&ctx, &command, &bot.database).await),
+                "insult" => Some(commands::insult::run(&command, &ctx, &bot.database).await),
+                // Lanas coin command subcommands inside
+                "lanascoin" => Some(commands::lanascoin::run(&ctx, &command, &bot.database).await),
+                "server" => Some(commands::server::run(&ctx, &command, &bot.database, &bot.mc_ip , &bot.mc_port).await),
+                // Test command please ignore
+                //"test" => commands::test::run(&ctx , &command , &self.database).await,
+                _ => {
+                    println!("ERROR 100 INTERACCIÓN NO EXISTENTE");
+                    Some(CommandResponse {
+                        result_string: "Comando no existente...".to_string(),
+                        ephemeral: true,
+                    })
+                }
+            };
+
+            let Some(content) = content else {
+                return ();
+            };
+
+            command_response = command_response.content(content.result_string).ephemeral(content.ephemeral);
+            let _ = command.create_response(&ctx , CreateInteractionResponse::Message(command_response.clone())).await;
+/*
+            //OLD COMMAND
+            if (valid_channels.contains(&command.channel_id.get())) || (command.guild_id.is_none()) {
                 content = match command.data.name.as_str() {
                     // Receiving of reaction-dependant commands (rd commands) processed here
                     "callme" => commands::callme::run(&command, &ctx).await,
                     // Receiving of non-reaction-dependant commands (nrd commands) processed here
                     "ping" => Some(commands::ping::run(&command.data.options)),
-                    "id" => Some(commands::id::run(&command.data.options)),
+                    "id" => Some(commands::id::run(&command , &ctx).await),
                     "ip" => Some(commands::ip::run(&command, &ctx).await),
                     "updatedb" => Some(commands::updatedb::run(&ctx, &command, &bot.database).await),
                     "insult" => Some(commands::insult::run(&command, &ctx, &bot.database).await),
@@ -56,6 +93,7 @@ pub async fn run(bot: &crate::Handler , ctx: Context, interaction: Interaction) 
                         println!("Couldn't respond to slash command:\n{}", why);
                     }
                 }
+                //ported
             } else if let Err(why) = command
                 .create_interaction_response(&ctx.http, |response| {
                     response
@@ -73,6 +111,7 @@ pub async fn run(bot: &crate::Handler , ctx: Context, interaction: Interaction) 
             {
                 println!("Cannot respond to slash command: {}", why);
             }
+*/
         }
         _ => {
             //Do nothing if interaction isn't one of the previously mentioned

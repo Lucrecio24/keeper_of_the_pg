@@ -1,20 +1,19 @@
 use crate::discord_bot::*;
-use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
+use serenity::all::CommandInteraction;
 
+// Didn't rewrite completely, just made compilable
 
 pub async fn run(
     _ctx: &serenity::client::Context ,
-    command: &ApplicationCommandInteraction,
+    command: &CommandInteraction,
     database: &sqlx::SqlitePool
     ) -> CommandResponse {
     
-    let user_id = command.user.id.as_u64().to_string();
+    let user_id = command.user.id.to_string();
     let query_result = sqlx::query!(
         "SELECT lanas_coin FROM members WHERE account_id = ?",
         user_id
-    )
-    .fetch_one(database)
-    .await;
+    ).fetch_one(database).await;
 
     if let Ok(result) = query_result {
         CommandResponse{
