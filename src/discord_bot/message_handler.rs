@@ -1,10 +1,12 @@
 extern crate serenity;
 
+use tokio::time::{sleep , Duration};
 use rand::Rng;
 use serenity::{
     model::channel::{
         Message,
-        ReactionType
+        ReactionType,
+        MessageType,
     },
     utils::parse_emoji
 };
@@ -51,7 +53,7 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
                 println!("Error sending message {:?}" , error)
             }
         }
-        if msg.mentions.contains(&serenity::model::prelude::UserId::from(270781465896288256).to_user(&ctx).await.unwrap()) && msg.kind == serenity::model::channel::MessageType::Regular {
+        if msg.mentions.contains(&serenity::model::prelude::UserId::from(270781465896288256).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
         // Fotos huevo con tocino
             let elected_photo: &str;
             {
@@ -65,25 +67,66 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
                     "https://imgur.com/mANUwCc"];
                 elected_photo = beok_photo_list[rng.gen_range(0..6)];
             }
-            if let Err(error) = msg.reply(&ctx, elected_photo).await {
-                    println!("Error sending message {:?}" , error)
+            match msg.reply(&ctx, elected_photo).await {
+                Err(error) => {println!("Error sending message {:?}" , error)}
+                Ok(reply) => {
+                    sleep(Duration::from_secs(5)).await;
+                    _ = reply.delete(&ctx).await;
+                }
             }
         }
         //Si contiene una mention al lanas, reaccionar con hakiri dance gif
-        if msg.mentions.contains(&serenity::model::prelude::UserId::from(228684802520383489).to_user(&ctx).await.unwrap()) && msg.kind == serenity::model::channel::MessageType::Regular {
+        if msg.mentions.contains(&serenity::model::prelude::UserId::from(228684802520383489).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
             // Gif hakiri dance
             let elected_photo: &str = "https://tenor.com/gdXo1Jz9Bd4.gif";
-            if let Err(error) = msg.reply(&ctx, elected_photo).await {
-                    println!("Error sending message {:?}" , error)
+            match msg.reply(&ctx, elected_photo).await {
+                Err(error) => {println!("Error sending message {:?}" , error)}
+                Ok(reply) => {
+                    sleep(Duration::from_secs(5)).await;
+                    _ = reply.delete(&ctx).await;
+                }
             }
         }
         //Si contiene una mention al toty, reaccionar con la locura
-        if msg.mentions.contains(&serenity::model::prelude::UserId::from(408088734722949132).to_user(&ctx).await.unwrap()) && msg.kind == serenity::model::channel::MessageType::Regular {
+        if msg.mentions.contains(&serenity::model::prelude::UserId::from(408088734722949132).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
             // Gif locura del payaso
             let elected_photo: &str = "https://tenor.com/nLfb5tspZ3j.gif";
-            if let Err(error) = msg.reply(&ctx, elected_photo).await {
-                    println!("Error sending message {:?}" , error)
+            match msg.reply(&ctx, elected_photo).await {
+                Err(error) => {println!("Error sending message {:?}" , error)}
+                Ok(reply) => {
+                    sleep(Duration::from_secs(5)).await;
+                    _ = reply.delete(&ctx).await;
+                }
             }
+        }
+        //Si contiene una mention al lucas
+        if msg.mentions.contains(&serenity::model::prelude::UserId::from(228685282185052160).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
+            {
+            let rng = rand::thread_rng().gen_range(1..6);
+            //println!("{}" , &rng);
+            match rng {
+                1..=4 => {}
+                5 => {
+                    match msg.reply(&ctx, "El admin").await {
+                        Err(error) => {println!("Error sending message {:?}" , error)}
+                        Ok(reply) => {
+                            sleep(Duration::from_secs(5)).await;
+                            _ = reply.delete(&ctx).await;
+                        }
+                    }
+                }
+                i32::MIN..=0_i32 | 6_i32..=i32::MAX => {println!("Number generated outside bounds")}
+            }
+            }
+        }//Si contiene una mention al lucas
+        if msg.mentions.contains(&serenity::model::prelude::UserId::from(762708012203769893).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
+            match msg.reply(&ctx, "Soaquin Jolis").await {
+                Err(error) => {println!("Error sending message {:?}" , error)}
+                Ok(reply) => {
+                    sleep(Duration::from_secs(5)).await;
+                    _ = reply.delete(&ctx).await;
+                }
+           }
         }
     }
 }
