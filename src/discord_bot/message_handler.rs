@@ -75,11 +75,32 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
                 }
             }
         }
-        //Si contiene una mention al lanas, reaccionar con hakiri dance gif
+        //Si contiene una mention al tommy, reaccionar impostor from among us
+        if msg.mentions.contains(&serenity::model::prelude::UserId::from(597123683802415115).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
+            // Gif amon gus?
+            let elected_photo: &str = "https://tenor.com/bI7ht.gif";
+            
+            match msg.reply(&ctx, elected_photo).await {
+                Err(error) => {println!("Error sending message {:?}" , error)}
+                Ok(reply) => {
+                    sleep(Duration::from_secs(5)).await;
+                    _ = reply.delete(&ctx).await;
+                }
+            }
+        }
+        //Si contiene una mention al lanas, reaccionar con hakiri dance gif 
         if msg.mentions.contains(&serenity::model::prelude::UserId::from(228684802520383489).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
             // Gif hakiri dance
-            let elected_photo: &str = "https://tenor.com/gdXo1Jz9Bd4.gif";
-            match msg.reply(&ctx, elected_photo).await {
+            let elected_link: &str;
+            {
+                let mut rng = rand::thread_rng();
+                let link_list = vec![
+                    "https://imgur.com/bM9S8QD",
+                    "https://tenor.com/bI7ht.gif"
+                    ];
+                elected_link = link_list[rng.gen_range(0..2)];
+            }
+            match msg.reply(&ctx, elected_link).await {
                 Err(error) => {println!("Error sending message {:?}" , error)}
                 Ok(reply) => {
                     sleep(Duration::from_secs(5)).await;
@@ -118,7 +139,7 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
                 i32::MIN..=0_i32 | 6_i32..=i32::MAX => {println!("Number generated outside bounds")}
             }
             }
-        }//Si contiene una mention al lucas
+        }//Si contiene una mention al soaquin jolis
         if msg.mentions.contains(&serenity::model::prelude::UserId::from(762708012203769893).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
             match msg.reply(&ctx, "Soaquin Jolis").await {
                 Err(error) => {println!("Error sending message {:?}" , error)}
