@@ -121,7 +121,7 @@ pub async fn run(command: &CommandInteraction , ctx: &serenity::client::Context)
     //_reactions = msg.clone().await_reaction(ctx);
 
     let Some(reaction) = msg.await_reaction(ctx)
-    .timeout(tokio::time::Duration::new(30,0))
+    .timeout(tokio::time::Duration::new(86400,0))
     .filter(|reaction| {
         filter_function(reaction)
     })
