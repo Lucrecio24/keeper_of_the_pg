@@ -1,10 +1,6 @@
 use crate::discord_bot::*;
 use mc_query::query::stat_full;
 
-//use serenity::builder::CreateApplicationCommand;
-//use serenity::model::prelude::command::CommandOptionType;
-//use serenity::model::prelude::{interaction::application_command::ApplicationCommandInteraction, command::Command};
-
 pub async fn run(
     _ctx: &serenity::client::Context,
     mc_ip: &str,
@@ -38,11 +34,4 @@ pub async fn run(
             }
         }
     }
-    
-
-
-    /*return CommandResponse{
-        result_string: String::from("ERROR 101;\nEnd of the code."),
-        ephemeral: true
-    }*/
 }

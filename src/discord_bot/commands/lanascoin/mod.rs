@@ -10,8 +10,6 @@ use serenity::{
     all::CommandInteraction,
 };
 
-//use crate::discord_bot::commands::lanascoin::*;
-
 pub async fn run(
     ctx: &serenity::client::Context,
     command: &CommandInteraction,

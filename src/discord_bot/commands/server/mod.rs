@@ -8,7 +8,6 @@ use serenity::{
     all::CommandInteraction,
 };
 
-//use crate::discord_bot::commands::server::*;
 
 pub async fn run(
     ctx: &serenity::client::Context,

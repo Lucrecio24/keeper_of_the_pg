@@ -165,64 +165,6 @@ pub async fn run(command: &CommandInteraction , ctx: &serenity::client::Context)
             return None;
         }
     }
-
-    // OLD CODE, COMMENT ASAP
-    /*
-    if let Some(reaction_action) = msg
-        .await_reaction(ctx)
-        .timeout(tokio::time::Duration::new(300,0))
-        .filter(|reaction| {
-            filter_function(reaction)
-        })
-        .await
-        {
-
-        if let serenity::collector::reaction_collector::ReactionAction::Added(reaction) = reaction_action.deref() {
-            match reaction.emoji.as_data().as_str(){
-                "🥵" => {
-                    if new_nickname.is_empty(){
-                        command.guild_id.unwrap().edit_member(&ctx , command.user.id , |m| m.nickname(&new_nickname)).await.unwrap();
-                        let _msg = msg.edit(ctx, |new_msg|
-                            new_msg.content(format!("{} se quitó su apodo\nCambio aprobado por {}" , Mention::from(command.user.id) , Mention::from(reaction.user_id.unwrap())))).await;
-                        None
-                    } else {
-                        command.guild_id.unwrap().edit_member(&ctx , command.user.id , |m| m.nickname(&new_nickname)).await.unwrap();
-                        let _msg = msg.edit(ctx, |new_msg|
-                            new_msg.content(format!("{} cambió su apodo a {}\nCambio aprobado por {}" , Mention::from(command.user.id) , new_nickname , Mention::from(reaction.user_id.unwrap())))).await;
-                        None
-                    }
-                }
-                "🥶" => {
-                    if new_nickname.is_empty() {
-                        let _msg = msg.edit(ctx, |new_msg|
-                            new_msg.content(format!("{} no pudo quitarse su apodo\nCambio denegado por {}" , Mention::from(command.user.id) , Mention::from(reaction.user_id.unwrap())))).await;
-                        None
-                    } else {
-                        let _msg = msg.edit(ctx, |new_msg|
-                            new_msg.content(format!("{} no pudo cambiar su apodo a {}\nCambio denegado por {}" , Mention::from(command.user.id) , new_nickname , Mention::from(reaction.user_id.unwrap())))).await;
-                        None
-                    }
-                }
-                //Si discord devuelve que alguna reaccion que no esté registrada, mandamos error y avisamos por el chat
-                _ => {
-                    println!("ERROR EN CALLME, EMOJI NO CORRESPONDIENTE");
-                    let _msg = msg.edit(ctx, |new_msg|
-                        new_msg.content("ERROR, diganle al Lucas".to_string())).await;
-                    None
-                }
-            }
-        } else {
-            let _msg = msg.edit(ctx, |new_msg|
-                new_msg.content("AAAAAAAAAAA WATAFAK".to_string())).await;
-            println!("Reaction received: {:?}" , reaction_action);
-            None
-        }
-        } else {
-            // Case exists if await_reaction reaches timeout
-            let _msg = msg.edit(ctx, |new_msg|
-                new_msg.content(format!("{} no pudo cambiar su apodo a {}\nTiempo de espera sobrepasado..." , Mention::from(command.user.id) , new_nickname))).await;
-            None
-        } */
 }
 
 

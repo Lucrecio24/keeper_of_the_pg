@@ -52,66 +52,7 @@ pub async fn run(bot: &crate::Handler , ctx: Context, interaction: Interaction) 
 
             command_response = command_response.content(content.result_string).ephemeral(content.ephemeral);
             let _ = command.create_response(&ctx , CreateInteractionResponse::Message(command_response.clone())).await;
-/*
-            //OLD COMMAND
-            if (valid_channels.contains(&command.channel_id.get())) || (command.guild_id.is_none()) {
-                content = match command.data.name.as_str() {
-                    // Receiving of reaction-dependant commands (rd commands) processed here
-                    "callme" => commands::callme::run(&command, &ctx).await,
-                    // Receiving of non-reaction-dependant commands (nrd commands) processed here
-                    "ping" => Some(commands::ping::run(&command.data.options)),
-                    "id" => Some(commands::id::run(&command , &ctx).await),
-                    "ip" => Some(commands::ip::run(&command, &ctx).await),
-                    "updatedb" => Some(commands::updatedb::run(&ctx, &command, &bot.database).await),
-                    "insult" => Some(commands::insult::run(&command, &ctx, &bot.database).await),
-                    // Lanas coin command subcommands inside
-                    "lanascoin" => Some(commands::lanascoin::lanascoin_handler::run(&ctx, &command, &bot.database).await),
-                    "server" => Some(commands::server::server_handler::run(&ctx, &command, &bot.database, &bot.mc_ip , &bot.mc_port).await),
-                    // Test command please ignore
-                    //"test" => commands::test::run(&ctx , &command , &self.database).await,
-                    _ => {
-                        println!("ERROR 100 INTERACCIÓN NO EXISTENTE");
-                        Some(CommandResponse {
-                            result_string: "Comando no existente...".to_string(),
-                            ephemeral: true,
-                        })
-                    }
-                };
-                if let Some(content) = content {
-                    if let Err(why) = command
-                        .create_interaction_response(&ctx.http, |response| {
-                            response
-                                .kind(InteractionResponseType::ChannelMessageWithSource)
-                                .interaction_response_data(|message| {
-                                    message
-                                        .content(content.result_string)
-                                        .ephemeral(content.ephemeral)
-                                })
-                        })
-                        .await
-                    {
-                        println!("Couldn't respond to slash command:\n{}", why);
-                    }
-                }
-                //ported
-            } else if let Err(why) = command
-                .create_interaction_response(&ctx.http, |response| {
-                    response
-                        .kind(InteractionResponseType::ChannelMessageWithSource)
-                        .interaction_response_data(|message| {
-                            message
-                                .content(format!(
-                                    "Canal equivocado. Prueba por {}",
-                                    keeper_of_the_pg_channel
-                                ))
-                                .ephemeral(true)
-                        })
-                })
-                .await
-            {
-                println!("Cannot respond to slash command: {}", why);
-            }
-*/
+
         }
         Interaction::Component(component_data) => {
             let custom_id = component_data.data.custom_id.clone();

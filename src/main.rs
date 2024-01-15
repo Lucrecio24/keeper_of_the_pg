@@ -62,27 +62,7 @@ impl EventHandler for Handler {
             dbc::ip::register()
         ];
         _ = Command::set_global_commands(&ctx , global_command_list).await;
-//.emoji(serenity::model::channel::ReactionType::from(serenity::model::id::EmojiId::new(1036702905530597447))).emoji(serenity::model::channel::ReactionType::from('🤓'))
-/*
-        let message = serenity::builder::CreateMessage::new().content("TEST MESSAGE PLEASE IGNORE")
-        .button(serenity::builder::CreateButton::new("rolebutton_test").label("test"))
-        .button(serenity::builder::CreateButton::new("rolebutton_test2").label("test2"));
-        
-        match guild_id.channels(&ctx).await.unwrap().get(&serenity::model::id::ChannelId::from(959921482551668756)){
-            Some(x) => {
-                match x.send_message(&ctx , message).await {
-                    Ok(_) => {
-                    }
-                    Err(error) => {
-                        println!("{:?}" , error);
-                    }
-                }
-            }
-            _ => {
-                println!("sexo")
-            }
-        }991080906200596511
- */
+
         match serenity::model::channel::Message::convert(&ctx, Some(guild_id) , Some(serenity::model::id::ChannelId::from(991080906200596511)), "1196194295674310758").await {
             Ok(mut rolebutton_message) => {
                 _ = rolebutton_message.edit(&ctx, crate::discord_bot::button_handler::role_message_builder().await).await;

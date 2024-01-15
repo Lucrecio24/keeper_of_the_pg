@@ -20,8 +20,6 @@ pub async fn run(
         }
     }
 
-
-    
     CommandResponse {
         result_string: "Command unfinished".to_string(),
         ephemeral: true
