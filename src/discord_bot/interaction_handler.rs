@@ -113,6 +113,28 @@ pub async fn run(bot: &crate::Handler , ctx: Context, interaction: Interaction) 
             }
 */
         }
+        Interaction::Component(component_data) => {
+            let custom_id = component_data.data.custom_id.clone();
+            let mut custom_id = custom_id.split("_");
+            let Some(firstword) = custom_id.nth(0) else {
+                return;
+            };
+            let Some(secondword) = custom_id.nth(0) else {
+                return;
+            };
+            
+            match firstword {
+                "rolebutton" => {
+                    crate::discord_bot::button_handler::rolebutton(ctx , component_data , secondword).await;
+                }
+                _ => {
+                    let response_message = CreateInteractionResponseMessage::new().content("Botón no configurado").ephemeral(true);
+                    let response = CreateInteractionResponse::Message(response_message);
+                    _ = component_data.create_response(ctx, response).await;
+                }
+            }
+        }
+
         _ => {
             //Do nothing if interaction isn't one of the previously mentioned
         }

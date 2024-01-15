@@ -2,7 +2,7 @@ pub mod message_handler;
 pub mod interaction_handler;
 pub mod new_member_handler;
 pub mod commands;
-
+pub mod button_handler;
 
 extern crate dotenvy;
 use serenity::all::RoleId;
