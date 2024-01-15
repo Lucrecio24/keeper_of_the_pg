@@ -6,12 +6,8 @@ use serenity::utils::ArgumentConvert;
 use tokio::task;
 use serenity::async_trait;
 use serenity::{
-        builder::CreateCommand,
         model::{
-            application::{
-                Command,
-                Interaction,
-            },
+            application::Interaction,
             channel::Message,
             gateway::Ready,
             id::GuildId,
@@ -42,27 +38,9 @@ impl EventHandler for Handler {
     async fn ready(&self, ctx: Context, ready: Ready) {
         println!("{} is connected!", ready.user.name);
 
-        let guild_id = GuildId::from(234453296545267714);
-        
-        use discord_bot::commands as dbc;
-        let guild_command_list: Vec<CreateCommand> = vec![
-            dbc::lanascoin::register(),
-            dbc::server::register(),
-            
-            dbc::ping::register(),
-            dbc::callme::register(),
-            dbc::id::register(),
-            dbc::insult::register(),
-            dbc::updatedb::register()
-        ];
-        _ = guild_id.set_commands(&ctx, guild_command_list).await;
+        crate::discord_bot::commands::mass_registering(&ctx).await;
 
-
-        let global_command_list: Vec<CreateCommand> = vec![
-            dbc::ip::register()
-        ];
-        _ = Command::set_global_commands(&ctx , global_command_list).await;
-
+        let guild_id = GuildId::from(234453296545267714);    
         match serenity::model::channel::Message::convert(&ctx, Some(guild_id) , Some(serenity::model::id::ChannelId::from(991080906200596511)), "1196194295674310758").await {
             Ok(mut rolebutton_message) => {
                 _ = rolebutton_message.edit(&ctx, crate::discord_bot::button_handler::role_message_builder().await).await;
