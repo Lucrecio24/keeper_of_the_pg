@@ -96,7 +96,7 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
                 let mut rng = rand::thread_rng();
                 let link_list = vec![
                     "https://imgur.com/bM9S8QD",
-                    "https://tenor.com/bI7ht.gif"
+                    "https://tenor.com/gdXo1Jz9Bd4.gif"
                     ];
                 elected_link = link_list[rng.gen_range(0..2)];
             }
