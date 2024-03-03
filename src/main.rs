@@ -31,6 +31,9 @@ impl EventHandler for Handler {
     async fn guild_member_addition(&self , ctx: Context , new_member: Member){
         crate::discord_bot::new_member_handler::run(ctx , new_member).await;
     }
+    async fn guild_audit_log_entry_create(&self , ctx: Context , entry: serenity::model::guild::audit_log::AuditLogEntry , guild_id: GuildId){
+        crate::discord_bot::updated_member_handler::run(ctx , entry , guild_id).await;
+    }
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
         crate::discord_bot::interaction_handler::run(self , ctx , interaction).await;
     }

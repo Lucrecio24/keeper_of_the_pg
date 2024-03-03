@@ -1,8 +1,11 @@
 pub mod message_handler;
 pub mod interaction_handler;
 pub mod new_member_handler;
+pub mod updated_member_handler;
 pub mod commands;
 pub mod button_handler;
+
+
 
 extern crate dotenvy;
 use serenity::all::RoleId;
@@ -83,3 +86,9 @@ pub fn rank_to_string(rank: serenity::model::id::RoleId) -> String {
     }
     rank_as_string
 }
+/*
+pub fn simple_message(ctx: serenity::client::Context , channel_id:  serenity::model::id::ChannelId , message_content: String) => {
+    let temp = channel_id.say(ctx , message)
+    if let channel_id
+}
+*/
