@@ -6,8 +6,12 @@ use serenity::all::Mention;
 use serenity::all::UserId;
 pub async fn run(ctx: serenity::client::Context , entry: serenity::model::guild::audit_log::AuditLogEntry , guild_id: GuildId){
 
-    if guild_id != GuildId::from(234453296545267714) {
+    if guild_id.get() != 234453296545267714 {
         println!("Audit log created outside KIPG. wtf.");
+        return;
+    }
+    // Check if audit log was caused by the bot itself
+    if entry.user_id.get() == 1004145386887319692 {
         return;
     }
     match entry.action {
