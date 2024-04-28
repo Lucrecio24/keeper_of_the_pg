@@ -116,9 +116,16 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
     }
     //Si contiene una mention al toty, reaccionar con la locura
     if msg.mentions.contains(&serenity::model::prelude::UserId::from(408088734722949132).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
-        // Gif locura del payaso
-        let elected_photo: &str = "https://tenor.com/nLfb5tspZ3j.gif";
-        match msg.reply(&ctx, elected_photo).await {
+        let elected_link: &str;
+        {
+            let mut rng = rand::thread_rng();
+            let link_list = vec![
+                "https://imgur.com/AIAIM0M",
+                "https://tenor.com/nLfb5tspZ3j.gif"
+                ];
+            elected_link = link_list[rng.gen_range(0..2)];
+        }
+        match msg.reply(&ctx, elected_link).await {
             Err(error) => {println!("Error sending message {:?}" , error)}
             Ok(reply) => {
                 sleep(Duration::from_secs(5)).await;
@@ -145,9 +152,36 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
             i32::MIN..=0_i32 | 6_i32..=i32::MAX => {println!("Number generated outside bounds")}
         }
         }
-    }//Si contiene una mention al soaquin jolis
+    }
+    //Si contiene una mention al soaquin jolis
     if msg.mentions.contains(&serenity::model::prelude::UserId::from(762708012203769893).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
-        match msg.reply(&ctx, "Soaquin Jolis").await {
+        let link: &str = "https://tenor.com/qME0wtX9xhG.gif";
+        match msg.reply(&ctx, link).await {
+            Err(error) => {println!("Error sending message {:?}" , error)}
+            Ok(reply) => {
+                sleep(Duration::from_secs(5)).await;
+                _ = reply.delete(&ctx).await;
+            }
+       }
+    }
+
+
+    // la "anto" / BIG BLACK COCK https://imgur.com/5uHRsz8
+    if msg.mentions.contains(&serenity::model::prelude::UserId::from(577666303326814238).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
+        let big_black_cock: &str = "https://imgur.com/5uHRsz8";
+        match msg.reply(&ctx, big_black_cock).await {
+            Err(error) => {println!("Error sending message {:?}" , error)}
+            Ok(reply) => {
+                sleep(Duration::from_secs(5)).await;
+                _ = reply.delete(&ctx).await;
+            }
+       }
+    }
+
+        // si contiene una mention al nacho jara / mewing snowman https://tenor.com/m0wi6ScLCqM.gif
+    if msg.mentions.contains(&serenity::model::prelude::UserId::from(694606491864530964).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
+        let big_black_cock: &str = "https://tenor.com/m0wi6ScLCqM.gif";
+        match msg.reply(&ctx, big_black_cock).await {
             Err(error) => {println!("Error sending message {:?}" , error)}
             Ok(reply) => {
                 sleep(Duration::from_secs(5)).await;
