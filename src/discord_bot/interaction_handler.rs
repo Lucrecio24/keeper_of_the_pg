@@ -34,7 +34,7 @@ pub async fn run(bot: &crate::Handler , ctx: Context, interaction: Interaction) 
                 "insult" => Some(commands::insult::run(&command, &ctx, &bot.database).await),
                 // Lanas coin command subcommands inside
                 "lanascoin" => Some(commands::lanascoin::run(&ctx, &command, &bot.database).await),
-                "server" => Some(commands::server::run(&ctx, &command, &bot.database, &bot.mc_ip , &bot.mc_port).await),
+                "server" => Some(commands::server::run(&ctx, &command, &bot.database, &bot.data).await),
                 // Test command please ignore
                 //"test" => commands::test::run(&ctx , &command , &self.database).await,
                 _ => {

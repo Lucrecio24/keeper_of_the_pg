@@ -22,8 +22,6 @@ use std::env;
 pub struct Handler {
     database: sqlx::SqlitePool,
     data: std::collections::HashMap<String , String>,
-    mc_ip: String,
-    mc_port: u16
 }
 
 #[async_trait]
@@ -83,12 +81,13 @@ async fn main() {
         .run(&database)
         .await
         .expect("Couldn't run databse migrations");
-    
-    let mc_ip: String = String::from("keepitpg.xyz");
-    let mc_port: u16 = 25569_u16;
-    
-    
-    let bot = Handler { database , mc_ip , mc_port};
+
+    let hashy: std::collections::HashMap<String, String> = std::collections::HashMap::from([
+        (String::from("mc_query_ip"), String::from("keepitpg.xyz")),
+        (String::from("mc_query_port"), String::from("25569")),   
+    ]); 
+
+    let bot = Handler { database , data: hashy};
 
     // Build our client.
     let mut client = Client::builder(token, GatewayIntents::all())
