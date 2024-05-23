@@ -10,6 +10,7 @@ pub async fn run(bot: &crate::Handler , ctx: Context, interaction: Interaction) 
     match interaction {
         Interaction::Ping(_) => {println!("Ping interaction")}
         Interaction::Command(command) => {
+            let readable_data = bot.data.read().await;
             let content: Option<CommandResponse>;
             let valid_channels: Vec<u64> = vec![1087524950425997383 , 959921482551668756 , 1004982773121032242];
             let Ok(keeper_of_the_pg_channel) = serenity::model::id::ChannelId::from(1087524950425997383).to_channel(&ctx).await else {
@@ -22,7 +23,6 @@ pub async fn run(bot: &crate::Handler , ctx: Context, interaction: Interaction) 
                 command_response = command_response.content(format!("Canal equivocado. Prueba por {}", keeper_of_the_pg_channel)).ephemeral(true);
                 let _ = command.create_response(&ctx , CreateInteractionResponse::Message(command_response.clone())).await;
             }
-
             content = match command.data.name.as_str() {
                 // Receiving of reaction-dependant commands (rd commands) processed here
                 "callme" => commands::callme::run(&command, &ctx).await,
@@ -34,7 +34,7 @@ pub async fn run(bot: &crate::Handler , ctx: Context, interaction: Interaction) 
                 "insult" => Some(commands::insult::run(&command, &ctx, &bot.database).await),
                 // Lanas coin command subcommands inside
                 "lanascoin" => Some(commands::lanascoin::run(&ctx, &command, &bot.database).await),
-                "server" => Some(commands::server::run(&ctx, &command, &bot.database, &bot.data).await),
+                "server" => Some(commands::server::run(&ctx, &command, &bot.database, &readable_data).await),
                 // Test command please ignore
                 //"test" => commands::test::run(&ctx , &command , &self.database).await,
                 _ => {

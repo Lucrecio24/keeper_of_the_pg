@@ -2,8 +2,6 @@ mod discord_bot;
 mod axum_webserver;
 
 use dotenvy::dotenv;
-use serenity::all::ResumedEvent;
-use serenity::utils::ArgumentConvert;
 use tokio::task;
 use serenity::async_trait;
 use serenity::{
@@ -21,7 +19,7 @@ use std::env;
 
 pub struct Handler {
     database: sqlx::SqlitePool,
-    data: std::collections::HashMap<String , String>,
+    data: RwLock<std::collections::HashMap<String , String>>
 }
 
 #[async_trait]
@@ -38,8 +36,21 @@ impl EventHandler for Handler {
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
         crate::discord_bot::interaction_handler::run(self , ctx , interaction).await;
     }
-    async fn resume(&self, _ctx: Context, _: ResumedEvent) {
-        let current_ip = public_ip::addr().await.unwrap();
+    async fn resume(&self, _ctx: Context, _: serenity::all::ResumedEvent) {
+        
+        let mut data = self.data.write().await;
+
+        let Some(current_ip) = public_ip::addr().await else {
+            return;
+        };
+        let Some(saved_ip) = data.get("saved_ip") else {
+            data.insert(String::from("saved_ip"), current_ip.to_string());
+            println!("{} is connected!", current_ip);
+            return;
+        };
+        if &current_ip.to_string() == saved_ip {
+            return;
+        }
         println!("Reconnected! current ip is: {}", current_ip);
     }
     async fn ready(&self, ctx: Context, ready: Ready) {
@@ -47,7 +58,8 @@ impl EventHandler for Handler {
 
         crate::discord_bot::commands::mass_registering(&ctx).await;
 
-        let guild_id = GuildId::from(234453296545267714);    
+        let guild_id = GuildId::from(234453296545267714);
+        use serenity::utils::ArgumentConvert;
         match serenity::model::channel::Message::convert(&ctx, Some(guild_id) , Some(serenity::model::id::ChannelId::from(991080906200596511)), "1196194295674310758").await {
             Ok(mut rolebutton_message) => {
                 _ = rolebutton_message.edit(&ctx, crate::discord_bot::button_handler::role_message_builder().await).await;
@@ -87,7 +99,7 @@ async fn main() {
         (String::from("mc_query_port"), String::from("25569")),   
     ]); 
 
-    let bot = Handler { database , data: hashy};
+    let bot = Handler { database , data: RwLock::new(hashy)};
 
     // Build our client.
     let mut client = Client::builder(token, GatewayIntents::all())
