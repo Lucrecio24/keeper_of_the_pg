@@ -4,6 +4,7 @@ pub mod new_member_handler;
 pub mod updated_member_handler;
 pub mod commands;
 pub mod button_handler;
+pub mod current_ip_handler;
 
 
 
