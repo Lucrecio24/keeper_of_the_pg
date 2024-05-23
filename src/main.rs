@@ -2,6 +2,7 @@ mod discord_bot;
 mod axum_webserver;
 
 use dotenvy::dotenv;
+use serenity::all::ResumedEvent;
 use serenity::utils::ArgumentConvert;
 use tokio::task;
 use serenity::async_trait;
@@ -17,8 +18,10 @@ use serenity::{
 };
 use std::env;
 
+
 pub struct Handler {
     database: sqlx::SqlitePool,
+    data: std::collections::HashMap<String , String>,
     mc_ip: String,
     mc_port: u16
 }
@@ -37,7 +40,10 @@ impl EventHandler for Handler {
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
         crate::discord_bot::interaction_handler::run(self , ctx , interaction).await;
     }
-
+    async fn resume(&self, _ctx: Context, _: ResumedEvent) {
+        let current_ip = public_ip::addr().await.unwrap();
+        println!("Reconnected! current ip is: {}", current_ip);
+    }
     async fn ready(&self, ctx: Context, ready: Ready) {
         println!("{} is connected!", ready.user.name);
 
