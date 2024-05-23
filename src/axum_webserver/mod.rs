@@ -15,6 +15,7 @@ pub async fn start_webserver(context: Arc<serenity::http::Http>) -> Result<() , 
      */
     // SENDS MESSAGE USING BOT
     .route("/sendmessage", get(templates::get_bot).post(templates::send_message_to_channel_handler))
+    .route("/test", get(templates::get_test))
     ;
 
     let app = app.fallback(templates::fallback);

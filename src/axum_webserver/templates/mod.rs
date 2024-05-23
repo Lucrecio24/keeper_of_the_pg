@@ -20,6 +20,7 @@ pub async fn root() -> Html<&'static str> {Html(std::include_str!("index.html"))
 
 ////BOT PAGES
 pub async fn get_bot() -> Html<&'static str> {Html(std::include_str!("bot.html"))}
+pub async fn get_test() -> Html<&'static str> {Html(std::include_str!("test.html"))}
 
 #[axum_macros::debug_handler]
 pub async fn send_message_to_channel_handler(State(context): State<Arc<serenity::http::Http>> , form: Form<FormData>) -> impl IntoResponse {
