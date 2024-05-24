@@ -41,8 +41,7 @@ impl EventHandler for Handler {
 
     }
     async fn ready(&self, ctx: Context, ready: Ready) {
-        println!("{} is connected!", ready.user.name);
-
+        log::info!("{} is connected!" , ready.user.name);
         crate::discord_bot::commands::mass_registering(&ctx).await;
 
         let guild_id = GuildId::from(234453296545267714);
@@ -61,7 +60,7 @@ impl EventHandler for Handler {
 #[tokio::main]
 async fn main() {
     dotenv().ok();
-
+    let _ = env_logger::builder().format_timestamp(Some(env_logger::fmt::TimestampPrecision::Seconds)).format_module_path(false).format_target(false).try_init().expect("Couldn't initialize logger");
     // Configure the client with your Discord bot token in the environment.
     let token: String = env::var("DISCORD_TOKEN").expect("DISCORD_TOKEN must be set.");
     let _database_url: String = env::var("DATABASE_URL").expect("DATABASE_URL must be set.");
