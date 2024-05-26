@@ -21,7 +21,6 @@ pub async fn run(_bot: &crate::Handler, ctx: serenity::client::Context, _: Resum
         log::error!("Couldn't get Lucrecio's user");
         return;
     };
-    log::debug!("saved_ip: '{}'\ncurrent_ip:'{}'" , saved_ip , current_ip);
     if current_ip.to_string() == saved_ip{
         log::info!("Reconnected! IP untouched");
     } else {
