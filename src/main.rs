@@ -1,6 +1,7 @@
 mod discord_bot;
 mod axum_webserver;
 
+use discord_bot::ConnectingType;
 use dotenvy::dotenv;
 use tokio::task;
 use serenity::async_trait;
@@ -36,12 +37,12 @@ impl EventHandler for Handler {
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
         crate::discord_bot::interaction_handler::run(self , ctx , interaction).await;
     }
-    async fn resume(&self, ctx: Context, resumed_event: serenity::all::ResumedEvent) {
-        crate::discord_bot::current_ip_handler(self, ctx, resumed_event).await;
-
+    async fn resume(&self, ctx: Context, _: serenity::all::ResumedEvent) {
+        crate::discord_bot::current_ip_handler(self, &ctx, ConnectingType::Resumed).await;
     }
     async fn ready(&self, ctx: Context, ready: Ready) {
-        log::info!("{} is connected!" , ready.user.name);
+        log::info!("{} ready for keeping" , ready.user.name);
+        crate::discord_bot::current_ip_handler(self, &ctx, ConnectingType::Ready).await;
         crate::discord_bot::commands::mass_registering(&ctx).await;
 
         let guild_id = GuildId::from(234453296545267714);

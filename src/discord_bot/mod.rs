@@ -80,9 +80,13 @@ pub fn rank_to_string(rank: serenity::model::id::RoleId) -> String {
     }
     rank_as_string
 }
-
-pub async fn current_ip_handler(_bot: &crate::Handler, ctx: serenity::client::Context, _: serenity::all::ResumedEvent){
+pub enum ConnectingType {
+    Ready,
+    Resumed
+}
+pub async fn current_ip_handler(_bot: &crate::Handler, ctx: &serenity::client::Context, connecting_type: ConnectingType){
     
+
     let Some(current_ip) = public_ip::addr().await else {
         log::error!("Couldn't read current ip. Is file missing or unreadable?");
         return;
@@ -101,7 +105,10 @@ pub async fn current_ip_handler(_bot: &crate::Handler, ctx: serenity::client::Co
         return;
     };
     if current_ip.to_string() == saved_ip{
-        log::info!("Reconnected! IP untouched");
+        match connecting_type {
+            ConnectingType::Ready => log::info!("Connected! Ip untouched from previous connection."),
+            ConnectingType::Resumed => {}
+        }
     } else {
         let Ok(_) = std::fs::write(std::path::Path::new("current_ip") , current_ip.to_string()) else {
             log::error!("Couldn't write current ip to file.");
@@ -110,6 +117,9 @@ pub async fn current_ip_handler(_bot: &crate::Handler, ctx: serenity::client::Co
         if let Err(x) = lucrecio_user.direct_message(&ctx, serenity::builder::CreateMessage::new().content(format!("IP changed! {}" , current_ip.to_string()))).await {
             log::error!("Couldn't send new IP to Lucrecio.\n{x}");
         }
-        log::info!("Reconnected! New IP is: {}", current_ip);
+        match connecting_type {
+            ConnectingType::Ready => log::info!("Connected! New IP is: {}", current_ip),
+            ConnectingType::Resumed => log::info!("IP change detected! New IP is: {}" , current_ip)
+        }
     }
 }
