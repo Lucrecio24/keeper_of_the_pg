@@ -14,7 +14,8 @@ pub async fn run(bot: &crate::Handler , ctx: Context, interaction: Interaction) 
             let content: Option<CommandResponse>;
             let valid_channels: Vec<u64> = vec![1087524950425997383 , 959921482551668756 , 1004982773121032242];
             let Ok(keeper_of_the_pg_channel) = serenity::model::id::ChannelId::from(1087524950425997383).to_channel(&ctx).await else {
-                todo!()
+                log::error!("Couldn't get keeper_of_the_pg channel for Keep it PG +18 official server");
+                todo!();
             };
             let mut command_response = CreateInteractionResponseMessage::new();
 
