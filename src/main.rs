@@ -37,7 +37,7 @@ impl EventHandler for Handler {
         crate::discord_bot::interaction_handler::run(self , ctx , interaction).await;
     }
     async fn resume(&self, ctx: Context, resumed_event: serenity::all::ResumedEvent) {
-        crate::discord_bot::current_ip_handler::run(self, ctx, resumed_event).await;
+        crate::discord_bot::current_ip_handler(self, ctx, resumed_event).await;
 
     }
     async fn ready(&self, ctx: Context, ready: Ready) {
