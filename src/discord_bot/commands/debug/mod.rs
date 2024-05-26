@@ -39,7 +39,7 @@ pub fn register() -> CreateCommand {
             "target user")
             .required(true))
         .add_sub_option(CreateCommandOption::new(
-            CommandOptionType::Integer,
+            CommandOptionType::String,
             "message_id",
             "id of the reference message")
             .required(true)))
