@@ -7,6 +7,7 @@ pub mod insult;
 pub mod updatedb;
 pub mod lanascoin;
 pub mod server;
+pub mod debug;
 
 use serenity::{
     builder::CreateCommand,
@@ -25,8 +26,8 @@ pub async fn mass_registering(ctx: &serenity::client::Context) {
     let guild_id = GuildId::from(234453296545267714);    
     let guild_command_list: Vec<CreateCommand> = vec![
         dbc::lanascoin::register(),
-        dbc::server::register(),
-        
+        dbc::server::register(), 
+
         dbc::ping::register(),
         dbc::callme::register(),
         dbc::id::register(),
@@ -37,7 +38,8 @@ pub async fn mass_registering(ctx: &serenity::client::Context) {
 
 
     let global_command_list: Vec<CreateCommand> = vec![
-        dbc::ip::register()
+        dbc::ip::register(),
+        dbc::debug::register()
     ];
     _ = Command::set_global_commands(&ctx , global_command_list).await;
 

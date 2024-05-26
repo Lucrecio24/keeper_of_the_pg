@@ -14,7 +14,7 @@ pub async fn run(
      -> CommandResponse {
 
     match command.data.options[0].name.as_str() {
-        "erase_before_dm" => add::run(ctx, command).await,
+        "erase_before_dm" => erase_before_dm::run(ctx, command).await,
         _ => {
             log::warn!("Subcommand '{}' doesn't exist" , command.data.options[0].name.as_str());
             CommandResponse{
@@ -32,17 +32,17 @@ pub fn register() -> CreateCommand {
     .add_option(CreateCommandOption::new(
         CommandOptionType::SubCommand,
         "erase_before_dm",
-        "Erases messages before a messageid in a private channel"))
+        "Erases messages before a messageid in a private channel")
         .add_sub_option(CreateCommandOption::new(
             CommandOptionType::User,
             "user",
             "target user")
             .required(true))
         .add_sub_option(CreateCommandOption::new(
-            CommandOptionType::User,
+            CommandOptionType::Integer,
             "message_id",
             "id of the reference message")
-            .required(true))
+            .required(true)))
     /*.add_option(CreateCommandOption::new(
         CommandOptionType::SubCommand,
         "info",

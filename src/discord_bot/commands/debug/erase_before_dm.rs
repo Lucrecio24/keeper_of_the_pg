@@ -1,6 +1,6 @@
 use crate::discord_bot::*;
-use serenity::all::{CommandInteraction , Mention};
-
+use serenity::all::CommandInteraction;
+use serenity::model::id::MessageId;
 
 pub async fn run(
     ctx: &serenity::client::Context,
@@ -12,18 +12,53 @@ pub async fn run(
 
 
     // Checking if actioner member is Lucrecio (228685282185052160)
-    if command.member.id.get() != 228685282185052160 {
+    if command.user.id.get() != 228685282185052160 {
         return CommandResponse{
             result_string: "No eres el Lucrecio.".to_string(),
             ephemeral: true
             }
     }
     // Saving command option as target user, or returning if invalid user (No idea if it is possible)
-    let Some(target_user_id) = command.data.options[0].value.clone().as_user_id() else {
+    let Some(target_user) = command.data.options[0].value.clone().as_user_id() else {
         return CommandResponse{
-            result_string: "Miembro a buscar no ingresado".to_string(),
+            result_string: "Miembro no ingresado".to_string(),
             ephemeral: true
         };
+    };
+    // Saving command option as target user, or returning if invalid user (No idea if it is possible)
+    let Some(target_message_id) = command.data.options[1].value.clone().as_i64() else {
+        return CommandResponse{
+            result_string: "Id de mensaje no ingresado".to_string(),
+            ephemeral: true
+        };
+    };
+    let target_message_id = target_message_id as u64;
+    // Get dm_channel for target_user
+    let Ok(target_channel) = target_user.create_dm_channel(&ctx).await else {
+        log::warn!("Couldn't get dm_channel for target_user.");
+        return CommandResponse{
+            result_string: "Error interno, avisale al Lucrecio".to_string(),
+            ephemeral: true
+        };
+    };
+    // Get vec messages containing everything before target_message_id
+    let Ok(messages_vec) = target_channel.messages(&ctx , serenity::builder::GetMessages::new().before(MessageId::new(target_message_id)).limit(100)).await else {
+        log::warn!("Couldn't get vec of messages before target_id");
+        return CommandResponse{
+            result_string: "Error interno, avisale al Lucrecio".to_string(),
+            ephemeral: true
+        };
+    };
+    let Ok(_) = target_channel.delete_messages(&ctx, messages_vec).await else {
+        log::warn!("Couldn't delete messages before target_id");
+        return CommandResponse{
+            result_string: "Error interno, avisale al Lucrecio".to_string(),
+            ephemeral: true
+        };
+    };
+    return CommandResponse{
+        result_string: "Mensajes borrados exitosamente".to_string(),
+        ephemeral: true
     };
     /*
     // Saving command option as target user, or returning if invalid user (No idea if it is possible)
