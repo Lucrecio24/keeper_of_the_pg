@@ -18,8 +18,6 @@ use serenity::{
 };
 
 
-
-
 pub async fn mass_registering(ctx: &serenity::client::Context) {
     use crate::discord_bot::commands as dbc;
     

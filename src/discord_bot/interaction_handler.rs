@@ -20,7 +20,7 @@ pub async fn run(bot: &crate::Handler , ctx: Context, interaction: Interaction) 
             let mut command_response = CreateInteractionResponseMessage::new();
 
 
-            if !(valid_channels.contains(&command.channel_id.get())) {    
+            if !(valid_channels.contains(&command.channel_id.get()) || command.guild_id.is_none()){    
                 command_response = command_response.content(format!("Canal equivocado. Prueba por {}", keeper_of_the_pg_channel)).ephemeral(true);
                 let _ = command.create_response(&ctx , CreateInteractionResponse::Message(command_response.clone())).await;
             }
