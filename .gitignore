@@ -8,3 +8,4 @@ sqlx-data.json
 Cargo.lock
 keepitpg.db-shm
 keepitpg.db-wal
+current_ip
