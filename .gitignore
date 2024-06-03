@@ -9,3 +9,4 @@ Cargo.lock
 keepitpg.db-shm
 keepitpg.db-wal
 current_ip
+/download
