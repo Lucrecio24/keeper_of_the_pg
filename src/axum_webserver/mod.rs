@@ -10,9 +10,9 @@ pub async fn start_webserver(context: Arc<serenity::http::Http>) -> Result<() , 
     let app = Router::new()
     .route("/", get(templates::root))
     
-    /* DOWNLOAD FUNCTIONALITY
-    .route("/archivo", get(templates::get_archivo))
-     */
+    //DOWNLOAD FUNCTIONALITY
+    .route("/download", get(templates::get_download).post(templates::post_download))
+
     // SENDS MESSAGE USING BOT
     .route("/sendmessage", get(templates::get_bot).post(templates::send_message_to_channel_handler))
     .route("/test", get(templates::get_test))
