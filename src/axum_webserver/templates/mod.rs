@@ -47,8 +47,8 @@ pub async fn post_download(State(_context): State<Arc<serenity::http::Http>> , f
     let body = axum::body::Body::from_stream(stream);
 
     let response = Response::builder()
-        .header("content_type", "octet-stream")
-        .header("content_disposition", format!("attachment; filename=\"{}\"" , file_name))
+        .header("Content_type", "application/x-download")
+        .header("Content-Disposition", format!("attachment; filename=\"{}\"", file_name))
         .body(body)
         .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Failed to build response".to_string()))?;
 
