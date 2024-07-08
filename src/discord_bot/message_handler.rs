@@ -120,7 +120,7 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
         {
             let mut rng = rand::thread_rng();
             let link_list = vec![
-                "https://imgur.com/AIAIM0M",
+                "https://tenor.com/b1xD5.gif",
                 "https://tenor.com/nLfb5tspZ3j.gif"
                 ];
             elected_link = link_list[rng.gen_range(0..2)];
@@ -181,6 +181,28 @@ pub async fn run(ctx: serenity::client::Context, msg: Message){
         // si contiene una mention al nacho jara / mewing snowman https://tenor.com/m0wi6ScLCqM.gif
     if msg.mentions.contains(&serenity::model::prelude::UserId::from(694606491864530964).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
         let big_black_cock: &str = "https://tenor.com/m0wi6ScLCqM.gif";
+        match msg.reply(&ctx, big_black_cock).await {
+            Err(error) => {println!("Error sending message {:?}" , error)}
+            Ok(reply) => {
+                sleep(Duration::from_secs(5)).await;
+                _ = reply.delete(&ctx).await;
+            }
+       }
+    }
+        // si contiene una mention al croño / you need my dna gif https://tenor.com/fUxnw8FW0va.gif
+    if msg.mentions.contains(&serenity::model::prelude::UserId::from(234812534522118145).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
+        let big_black_cock: &str = "https://tenor.com/fUxnw8FW0va.gif";
+        match msg.reply(&ctx, big_black_cock).await {
+            Err(error) => {println!("Error sending message {:?}" , error)}
+            Ok(reply) => {
+                sleep(Duration::from_secs(5)).await;
+                _ = reply.delete(&ctx).await;
+            }
+       }
+    }
+        // si contiene una mention al franco https://imgur.com/a/eBR7N7X
+    if msg.mentions.contains(&serenity::model::prelude::UserId::from(553385188521148426).to_user(&ctx).await.unwrap()) && msg.kind == MessageType::Regular {
+        let big_black_cock: &str = "https://imgur.com/Eb5OR8x";
         match msg.reply(&ctx, big_black_cock).await {
             Err(error) => {println!("Error sending message {:?}" , error)}
             Ok(reply) => {
