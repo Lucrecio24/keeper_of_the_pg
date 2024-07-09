@@ -1,7 +1,7 @@
 pub mod message_handler;
 pub mod interaction_handler;
 pub mod new_member_handler;
-pub mod updated_member_handler;
+pub mod audit_log_update_handler;
 pub mod commands;
 pub mod button_handler;
 
