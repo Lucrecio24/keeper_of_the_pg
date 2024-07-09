@@ -39,10 +39,12 @@ impl EventHandler for Handler {
     }
     async fn resume(&self, ctx: Context, _: serenity::all::ResumedEvent) {
         crate::discord_bot::current_ip_handler(self, &ctx, ConnectingType::Resumed).await;
+        crate::discord_bot::update_domain_ip().await;
     }
     async fn ready(&self, ctx: Context, ready: Ready) {
         log::info!("{} ready for keeping" , ready.user.name);
         crate::discord_bot::current_ip_handler(self, &ctx, ConnectingType::Ready).await;
+        crate::discord_bot::update_domain_ip().await;
         crate::discord_bot::commands::mass_registering(&ctx).await;
 
         let guild_id = GuildId::from(234453296545267714);
@@ -93,7 +95,7 @@ async fn main() {
         .event_handler(bot)
         .await
         .expect("Error creating client");
-    
+        
 
     let client_context = client.http.clone();
     let bot_task = task::spawn(async move {

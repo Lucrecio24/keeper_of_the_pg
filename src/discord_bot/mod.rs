@@ -86,7 +86,6 @@ pub enum ConnectingType {
 }
 pub async fn current_ip_handler(_bot: &crate::Handler, ctx: &serenity::client::Context, connecting_type: ConnectingType){
     
-
     let Some(current_ip) = public_ip::addr().await else {
         log::error!("Couldn't read current ip. Is file missing or unreadable?");
         return;
@@ -122,4 +121,10 @@ pub async fn current_ip_handler(_bot: &crate::Handler, ctx: &serenity::client::C
             ConnectingType::Resumed => log::info!("IP change detected! New IP is: {}" , current_ip)
         }
     }
+}
+
+pub async fn update_domain_ip(){
+    let mut easy = curl::easy::Easy::new();
+    easy.url("https://njal.la/update/?h=keepitpg.xyz&k=wbjjrqnjj65qrojq&auto").unwrap();
+    easy.perform().unwrap();
 }
